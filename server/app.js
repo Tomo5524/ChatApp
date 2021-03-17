@@ -14,7 +14,6 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
 var indexRouter = require("./routes/index");
-// var usersRouter = require("./routes/users");
 
 var cors = require("cors");
 var app = express();
