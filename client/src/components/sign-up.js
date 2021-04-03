@@ -17,6 +17,8 @@ function Signup() {
     settUsername(e.target.value);
   };
 
+  // console.log("hiya");
+
   const passwordChange = (e) => {
     setPassword(e.target.value);
   };

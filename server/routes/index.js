@@ -37,9 +37,10 @@ passport.use(
 );
 
 /* GET home page. */
-// router.get("/", function (req, res, next) {
-//   res.render("index", { title: "Express" });
-// });
+router.get("/", function (req, res, next) {
+  // res.render("index", { title: "Express" });
+  res.send("hiya");
+});
 
 router.post("/api/login", Controllers.post_login);
 
