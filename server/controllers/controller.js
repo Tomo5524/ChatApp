@@ -38,3 +38,17 @@ exports.post_login = function (req, res, next) {
     });
   });
 };
+
+exports.post_delete = (req, res, next) => {
+  console.log(
+    req.params.username,
+    "this is req.params.id///////////////////////////"
+  );
+  User.findOneAndDelete({ username: req.params.username }, (err) => {
+    console.log("delete got called");
+    if (err) {
+      console.log(err, "this is err msg ////////////////////");
+      // return res.status(401).json(err);
+    }
+  });
+};

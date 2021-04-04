@@ -7,8 +7,9 @@ function Signup() {
   const [username, settUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpass, setConfirmpass] = useState("");
-  const [err, setError] = useState("");
+  const [errMessage, seterrMessage] = useState("");
   let history = useHistory();
+  // let errorMessage;
 
   console.log(username, "username,/////////");
   console.log(password, "password,,/////////");
@@ -36,7 +37,6 @@ function Signup() {
     console.log("handleSubmit/////////");
     if (checkPassword(password, confirmpass)) {
       console.log(password, confirmpass, "password, confirmpass/////////");
-      // console.log("password, went thru/////////");
       fetch("http://localhost:5000/api/sign-up", {
         // mode: "cors",
         method: "POST",
@@ -48,18 +48,46 @@ function Signup() {
         },
         body: JSON.stringify({ username, password }),
       })
-        .then(function (response) {
-          // console.log("went through/////////");
-          console.log(response, "response//////");
-          return response.json();
+        .then((data) => data.json())
+        .then(function (res) {
+          // if user successfully sign up
+          if (res.token) {
+            console.log(res.user.username, "res.user.username");
+            history.push(`/chat/${res.user.username}`);
+            console.log(res, "currentUser");
+            localStorage.setItem("currentUser", JSON.stringify(res));
+            // return
+          }
+          // can connect database but something went wrong, etc, username already is taken
+          else {
+            seterrMessage(res.msg);
+            error.current.classList.add("display");
+            setTimeout(() => {
+              error.current.classList.remove("display");
+            }, 4000);
+            console.log(errMessage);
+          }
         })
-
         .catch((err) => {
           console.log("did not go thru");
           console.log(err);
+          // console.log({ err });
+          // console.log(err.message);
+          // seterrMessage(err); got the following error message,
+          // Error: Objects are not valid as a React child (found: TypeError: Failed to fetch). If you meant to render a collection of children, use an array instead.
+          // err is not string but object so you need to deconstruct
+          // seterrMessage(err.message);
+          // seterrMessage("Failed to connect database");
+          seterrMessage("Something went wrong");
+          error.current.classList.add("display");
+          setTimeout(() => {
+            error.current.classList.remove("display");
+          }, 4000);
+          console.log(errMessage);
         });
-      // history.push("/");
     } else {
+      console.log("pass no match");
+      seterrMessage("Passwords don't match");
       error.current.classList.add("display");
       setTimeout(() => {
         error.current.classList.remove("display");
@@ -103,7 +131,7 @@ function Signup() {
           />
         </div>
         <div ref={error} className="error-container d-block pb-3">
-          <p className="m-0">Password don't match</p>
+          <h2 className="m-0">{errMessage}</h2>
         </div>
         <button type="submit" className="btn btn-primary">
           Sign Up

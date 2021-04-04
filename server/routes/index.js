@@ -54,7 +54,12 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username });
-    if (user) throw Error("User already exists");
+    // if (user) throw Error("User already exists")
+    // if (user) res.status(400).json({ error: "User already exists" }); wrong
+    if (user) {
+      // throw Error("User already exists"); this line caused error message not to be sent to frontend
+      return res.status(400).json({ msg: "Username is already taken" });
+    }
     // hash password
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       // console.log(hashedPassword, "hashedPassword called////////////");
@@ -62,6 +67,7 @@ router.post("/api/sign-up", async (req, res, next) => {
       if (err) {
         console.log(err);
         return next(err);
+        // return res.status(400).json({ msg: "Something went wrong hashing the password" });
         // throw Error('Something went wrong hashing the password');
       }
       const newUser = new User({
@@ -89,5 +95,7 @@ router.post("/api/sign-up", async (req, res, next) => {
     res.status(400).json({ error: e.message });
   }
 });
+
+router.post("/api/delete/:username", Controllers.post_delete);
 
 module.exports = router;

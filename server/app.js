@@ -29,6 +29,11 @@ const io = socketio(server);
 // each user has unique properites (id etc,,,)
 io.on("connect", (socket) => {
   console.log("user joined");
+
+  socket.on("join", (username) => {
+    console.log(`${username} joined!//`);
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
