@@ -39,16 +39,36 @@ exports.post_login = function (req, res, next) {
   });
 };
 
-exports.post_delete = (req, res, next) => {
+exports.post_delete = async (req, res, next) => {
   console.log(
-    req.params.username,
-    "this is req.params.id///////////////////////////"
+    req.params,
+    "this is req.params.id from delete post///////////////////////////"
   );
-  User.findOneAndDelete({ username: req.params.username }, (err) => {
-    console.log("delete got called");
-    if (err) {
-      console.log(err, "this is err msg ////////////////////");
-      // return res.status(401).json(err);
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (deletedUser) {
+      console.log(
+        `Successfully deleted document that had the form: ${deletedUser}.`
+      );
+    } else {
+      console.log("No document matches the provided query.");
     }
-  });
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
+  // this delete error handling from official document
+  // return await User.findByIdAndDelete(req.params.id)
+  //   .then((deletedDocument) => {
+  //     if (deletedDocument) {
+  //       console.log(
+  //         `Successfully deleted document that had the form: ${deletedDocument}.`
+  //       );
+  //     } else {
+  //       console.log("No document matches the provided query.");
+  //     }
+  //     // return deletedDocument;
+  //   })
+  //   .catch((err) =>
+  //     console.error(`Failed to find and delete document: ${err}`)
+  //   );
 };

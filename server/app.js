@@ -28,7 +28,7 @@ const io = socketio(server);
 // socket is the user who just joined.
 // each user has unique properites (id etc,,,)
 io.on("connect", (socket) => {
-  console.log("user joined");
+  // console.log("user joined");
 
   socket.on("join", (username) => {
     console.log(`${username} joined!//`);
@@ -36,6 +36,7 @@ io.on("connect", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    // console.log(`${username} disconnected!//`);
   });
 });
 

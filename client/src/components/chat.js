@@ -14,14 +14,8 @@ function Chat() {
   const [currentUser, setCurrentUser] = useState("");
   console.log("🚀 ~ file: chat.js ~ line 15 ~ Chat ~ currentUser", currentUser);
   const username = currentUser && currentUser.user.username;
-
-  // if (currentUser) {
-  //   console.log(
-  //     "🚀 ~ file: chat.js ~ line 14 ~ Chat ~ currentUser",
-  //     currentUser
-  //   );
-  //   console.log(currentUser.user.username, "currentUser");
-  // }
+  const id = currentUser && currentUser.user.id;
+  console.log(id, "id");
 
   let history = useHistory();
   const ENDPOINT = "http://localhost:5000";
@@ -46,18 +40,20 @@ function Chat() {
     // socket.emit("join", currentUser.user.username);
     // console.log(socket, "socket");
     if (currentUser) {
-      socket.emit("join", currentUser.user.username);
+      socket.emit("join", username);
       // unamount
       return () => {
-        socket.emit("disconnect");
-        // turn off the user that just left
-        socket.off();
+        if (currentUser) {
+          socket.emit("disconnect");
+          // turn off the user that just left
+          socket.off();
+        }
       };
     }
   }, [currentUser]);
 
   const handleLogOut = () => {
-    setCurrentUser("");
+    // setCurrentUser("");
     logOut();
     // isFirstRun.current = true;
   };
@@ -65,12 +61,12 @@ function Chat() {
   const deleteUser = (e) => {
     ///there is a delay after you delay react delete
     // console.log(props.location.state.post._id, "props._id//////////");
-    if (username) {
+    if (currentUser) {
       try {
-        fetch(`http://localhost:5000/api/delete/${username}`, {
+        fetch(`http://localhost:5000/api/delete/${id}`, {
           mode: "cors",
           method: "POST",
-          acition: `http://localhost:5000/api/delete/${username}`,
+          acition: `http://localhost:5000/api/delete/${id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: authHeader(),
@@ -90,7 +86,7 @@ function Chat() {
   return (
     <div className="container">
       <h2>Welcome to Chat App</h2>
-      {currentUser ? <h4>Welcomeback {username}!</h4> : <h2>No chat</h2>}
+      {currentUser ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
       <button className="btn btn-primary" onClick={handleLogOut}>
         Log out
       </button>

@@ -77,6 +77,7 @@ router.post("/api/sign-up", async (req, res, next) => {
       });
 
       const savedUser = await newUser.save();
+      console.log(savedUser, "saveduser/////////");
       if (!savedUser) throw Error("Something went wrong saving the user");
 
       // create token
@@ -96,6 +97,6 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
 });
 
-router.post("/api/delete/:username", Controllers.post_delete);
+router.post("/api/delete/:id", Controllers.post_delete);
 
 module.exports = router;
