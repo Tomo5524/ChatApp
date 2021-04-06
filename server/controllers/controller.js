@@ -1,10 +1,36 @@
 var express = require("express");
 var User = require("../models/user");
+var Room = require("../models/room");
 // var async = require("async");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 // const moment = require("moment-timezone");
 const { body, validationResult } = require("express-validator");
+
+exports.rooms_get = async (req, res, next) => {
+  try {
+    const Rooms = await Room.findOne({ roomName: req.params.slug });
+    if (Rooms) {
+      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+    } else {
+      console.log("No document matches the provided query.");
+    }
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
+  // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   // Successful, so render
+  //   console.log(
+  //     "🚀 ~ file: controller.js ~ line 12 ~ Room.findOne ~ room",
+  //     room
+  //   );
+  //   res.status(200).json(post);
+  //   // res.json(posts);
+  // });
+};
 
 exports.post_login = function (req, res, next) {
   const { username, password } = req.body;
@@ -30,6 +56,7 @@ exports.post_login = function (req, res, next) {
           message: "User authenticated",
           token,
           user,
+          // slug: savedUser.slug,
         });
       } else {
         console.log("Incorrect Password");

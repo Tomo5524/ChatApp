@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const slugify = require("slugify");
 
-const UserSchema = new Schema({
-  username: { type: String, unique: true, required: true },
-  password: { type: String, required: true, minlength: 4 },
-  joinedDate: { type: String },
+const RoomSchema = new Schema({
+  roomName: { type: String, unique: true, required: true },
+  createdDate: { type: String },
+  messages: [{ type: [Object] }],
   slug: {
     type: String,
     required: true,
@@ -13,10 +13,10 @@ const UserSchema = new Schema({
 });
 
 // postSchema.pre("validate", function ()=> {} { // doest not work
-UserSchema.pre("validate", function (next) {
+RoomSchema.pre("validate", function (next) {
   console.log("pre gets called/////////////");
-  if (this.username) {
-    this.slug = slugify(this.username, {
+  if (this.roomName) {
+    this.slug = slugify(this.roomName, {
       // replacement: "-", // replace spaces with replacement character, defaults to `-`
       lower: true, // convert to lower case, defaults to `false`
       strict: true, // strip special characters except replacement, defaults to `false`
@@ -25,4 +25,4 @@ UserSchema.pre("validate", function (next) {
   next();
 });
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("room", RoomSchema);

@@ -88,6 +88,7 @@ router.post("/api/sign-up", async (req, res, next) => {
         user: {
           id: savedUser.id,
           username: savedUser.username,
+          slug: savedUser.slug,
         },
       });
     });
@@ -97,6 +98,7 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
 });
 
+router.post("/api/rooms", Controllers.rooms_get);
 router.post("/api/delete/:id", Controllers.post_delete);
 
 module.exports = router;

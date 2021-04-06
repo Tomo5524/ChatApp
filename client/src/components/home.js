@@ -15,7 +15,7 @@ function Home() {
     // if user already logged in, navigate to chat component
     <Redirect
       to={{
-        pathname: `/chat/${username}`,
+        pathname: "/:slug",
         props: { username },
       }}
     />

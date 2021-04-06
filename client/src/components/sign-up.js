@@ -14,20 +14,6 @@ function Signup() {
   console.log(username, "username,/////////");
   console.log(password, "password,,/////////");
 
-  const usernameChange = (e) => {
-    settUsername(e.target.value);
-  };
-
-  // console.log("hiya");
-
-  const passwordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const confirmpassChange = (e) => {
-    setConfirmpass(e.target.value);
-  };
-
   const checkPassword = (password, confirmpass) => {
     if (password === confirmpass) return true;
     else return false;
@@ -50,10 +36,12 @@ function Signup() {
       })
         .then((data) => data.json())
         .then(function (res) {
+          console.log("🚀 ~ file: sign-up.js ~ line 39 ~ res", res);
           // if user successfully sign up
           if (res.token) {
             console.log(res.user.username, "res.user.username");
-            history.push(`/chat/${res.user.username}`);
+            history.push(`/chat/${res.user.slug}`);
+            // history.push(`/chat/${res.user.username}`); wrong
             console.log(res, "currentUser");
             localStorage.setItem("currentUser", JSON.stringify(res));
             // return
@@ -106,7 +94,7 @@ function Signup() {
           <input
             type="text"
             className="form-control"
-            onChange={usernameChange}
+            onChange={(e) => settUsername(e.target.value)}
             placeholder="Enter Username"
             required
           />
@@ -116,7 +104,7 @@ function Signup() {
           <input
             type="password"
             className="form-control"
-            onChange={passwordChange}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
@@ -125,7 +113,7 @@ function Signup() {
           <input
             type="password"
             className="form-control"
-            onChange={confirmpassChange}
+            onChange={(e) => setConfirmpass(e.target.value)}
             placeholder="Enter the same Password ablove to confirm"
             required
           />
