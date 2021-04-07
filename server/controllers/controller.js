@@ -4,33 +4,8 @@ var Room = require("../models/room");
 // var async = require("async");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-// const moment = require("moment-timezone");
+const moment = require("moment-timezone");
 const { body, validationResult } = require("express-validator");
-
-exports.rooms_get = async (req, res, next) => {
-  try {
-    const Rooms = await Room.findOne({ roomName: req.params.slug });
-    if (Rooms) {
-      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
-    } else {
-      console.log("No document matches the provided query.");
-    }
-  } catch (err) {
-    console.error(`Failed to find and delete document: ${err}`);
-  }
-  // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
-  //   if (err) {
-  //     return next(err);
-  //   }
-  //   // Successful, so render
-  //   console.log(
-  //     "🚀 ~ file: controller.js ~ line 12 ~ Room.findOne ~ room",
-  //     room
-  //   );
-  //   res.status(200).json(post);
-  //   // res.json(posts);
-  // });
-};
 
 exports.post_login = function (req, res, next) {
   const { username, password } = req.body;
@@ -63,6 +38,61 @@ exports.post_login = function (req, res, next) {
         return res.status(401).json({ message: "Incorrect Password" });
       }
     });
+  });
+};
+
+exports.get_rooms = async (req, res, next) => {
+  try {
+    const Rooms = await Room.find();
+    if (Rooms) {
+      res.status(200).json(Rooms);
+      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+    } else {
+      console.log("No document matches the provided query.");
+    }
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
+  // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   // Successful, so render
+  //   console.log(
+  //     "🚀 ~ file: controller.js ~ line 12 ~ Room.findOne ~ room",
+  //     room
+  //   );
+  //   res.status(200).json(post);
+  //   // res.json(posts);
+  // });
+};
+
+exports.post_create_room = async (req, res, next) => {
+  console.log(req.body, "req.body/////");
+  // Validate and santise the name field.
+  // body("title", "Name must be between 1 and 200 characters")
+  //   .isLength({ min: 1, max: 200 })
+  //   .escape(),
+  // body("description", "Name must be more than 1 character")
+  //   .isLength({ min: 1 })
+  //   .escape(),
+  // console.log(req.body, "req.body");
+  // const errors = validationResult(req);
+
+  const newRoom = new Room({
+    roomName: req.body.roomname,
+    // messages: [],
+    createdDate: moment().tz("Asia/Tokyo").format("lll"),
+  });
+  const savedRoom = await newRoom.save();
+  console.log(newRoom, "newRoom/////////");
+  if (!newRoom) throw Error("Something went wrong saving the user");
+  res.status(200).json({
+    // savedRoom,
+    id: savedRoom.id,
+    roomName: savedRoom.roomName,
+    // createdDate: savedRoom.createdDate,
+    roomSlug: savedRoom.roomSlug,
   });
 };
 

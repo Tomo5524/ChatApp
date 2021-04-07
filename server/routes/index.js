@@ -42,6 +42,7 @@ router.get("/", function (req, res, next) {
   res.send("hiya");
 });
 
+router.get("/api/rooms", Controllers.get_rooms);
 router.post("/api/login", Controllers.post_login);
 
 router.post("/api/sign-up", async (req, res, next) => {
@@ -88,7 +89,7 @@ router.post("/api/sign-up", async (req, res, next) => {
         user: {
           id: savedUser.id,
           username: savedUser.username,
-          slug: savedUser.slug,
+          userSlug: savedUser.userSlug,
         },
       });
     });
@@ -98,7 +99,7 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
 });
 
-router.post("/api/rooms", Controllers.rooms_get);
+router.post("/api/create-room", Controllers.post_create_room);
 router.post("/api/delete/:id", Controllers.post_delete);
 
 module.exports = router;

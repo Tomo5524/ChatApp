@@ -40,7 +40,7 @@ function Signup() {
           // if user successfully sign up
           if (res.token) {
             console.log(res.user.username, "res.user.username");
-            history.push(`/chat/${res.user.slug}`);
+            history.push(`/chat/${res.user.userSlug}`);
             // history.push(`/chat/${res.user.username}`); wrong
             console.log(res, "currentUser");
             localStorage.setItem("currentUser", JSON.stringify(res));

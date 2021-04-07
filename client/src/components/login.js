@@ -9,14 +9,6 @@ function Login() {
   const [errMessage, setError] = useState("");
   let history = useHistory();
 
-  const usernameChange = (e) => {
-    settUsername(e.target.value);
-  };
-
-  const passwordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit/////////");
@@ -37,16 +29,18 @@ function Login() {
       if (currentUser.token) {
         console.log(currentUser, "currentUser");
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        history.push("/");
+        // history.push("/");
+        // history.push(`/chat/${currentUser.token.userSlug}`);
         window.location.reload();
-        return;
+        // return;
+      } else {
+        console.log(currentUser);
+        setError(currentUser.message);
+        error.current.classList.add("display");
+        setTimeout(() => {
+          error.current.classList.remove("display");
+        }, 2000);
       }
-      console.log(currentUser);
-      setError(currentUser.message);
-      error.current.classList.add("display");
-      setTimeout(() => {
-        error.current.classList.remove("display");
-      }, 2000);
     } catch (e) {
       console.log(e);
     }
@@ -62,7 +56,7 @@ function Login() {
           <input
             type="text"
             className="form-control"
-            onChange={usernameChange}
+            onChange={(e) => settUsername(e.target.value)}
             placeholder="Enter Username"
             required
           />
@@ -72,7 +66,7 @@ function Login() {
           <input
             type="password"
             className="form-control"
-            onChange={passwordChange}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
