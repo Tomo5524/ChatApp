@@ -7,12 +7,15 @@ import io from "socket.io-client";
 
 let socket;
 
-function Room(props) {
+function Room() {
   // console.log(localStorage, "locastorage");
   // const [username, settUsername] = useState("");
-  console.log("chat got called");
+  console.log("room got called");
   const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
+  // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
+  // pass in roominfo to chat componnet so room messages can be extracted from its id
+  const [roomInfo, setRoomInfo] = useState();
   const [rooms, setRooms] = useState([]);
   // console.log("🚀 ~ file: chat.js ~ line 15 ~ Chat ~ currentUser", currentUser);
   const username = currentUser && currentUser.user.username;
@@ -27,7 +30,7 @@ function Room(props) {
     // get current user
     setCurrentUser(getUser());
     // grab rooms from back end
-    // fetchRooms();
+    fetchRooms();
   }, []);
 
   const fetchRooms = async () => {
@@ -97,6 +100,7 @@ function Room(props) {
     }
   };
 
+  // if there is no room to select, let user create a new room and navigate to chat component
   const createRoom = async (e) => {
     console.log("create room");
     console.log(Room, "Room");
@@ -117,11 +121,19 @@ function Room(props) {
       console.log(room, "room/////");
       e.preventDefault();
       setRoom("");
-      const currnetURL = props.location.pathname;
-      history.push(`/${currnetURL}/${room.roomSlug}`);
+      // console.log(history, "history");
+      const currnetURL = history.location.pathname;
+      history.push(`${currnetURL}/${room.roomSlug}`);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  // if there are already rooms to choose, this functin gets called
+  const moveToAnotherRoom = () => {
+    console.log(Room, "Room before moving onto another component////////////");
+    const currnetURL = history.location.pathname;
+    history.push(`${currnetURL}/${Room}`);
   };
 
   // console.log(rooms, "rooms////////////");
@@ -149,16 +161,15 @@ function Room(props) {
               className="form-control"
               onChange={(e) => setRoom(e.target.value)}
             >
-              {/* <option value="meow">meow</option>
-              <option value="birk">dog</option>
-              <option value="fox">yeah</option> */}
               {rooms.map((room) => (
-                <option key={room} value={room.roomName}>
+                <option key={room._id} value={room.roomSlug}>
                   {room.roomName}
                 </option>
-              ))}{" "}
-              */
+              ))}
             </select>
+            <button onClick={moveToAnotherRoom} className="big-button">
+              Go to room
+            </button>
           </div>
         ) : (
           <div className="col-6">

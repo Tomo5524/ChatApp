@@ -30,7 +30,7 @@ function Login() {
         console.log(currentUser, "currentUser");
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
         // history.push("/");
-        // history.push(`/chat/${currentUser.token.userSlug}`);
+        history.push(`/chat/${currentUser.token.userSlug}`);
         window.location.reload();
         // return;
       } else {

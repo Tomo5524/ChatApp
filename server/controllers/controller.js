@@ -46,7 +46,7 @@ exports.get_rooms = async (req, res, next) => {
     const Rooms = await Room.find();
     if (Rooms) {
       res.status(200).json(Rooms);
-      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+      // console.log(`Successfully deleted document that had the form: ${Rooms}.`);
     } else {
       console.log("No document matches the provided query.");
     }
