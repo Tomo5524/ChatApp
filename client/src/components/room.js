@@ -3,9 +3,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { authHeader, logOut, getUser } from "../services/auth";
 
 import { useHistory } from "react-router-dom";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
-let socket;
+// let socket;
 
 function Room() {
   // console.log(localStorage, "locastorage");
@@ -15,7 +15,7 @@ function Room() {
   const [Room, setRoom] = useState("");
   // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
   // pass in roominfo to chat componnet so room messages can be extracted from its id
-  const [roomInfo, setRoomInfo] = useState();
+  const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
   // console.log("🚀 ~ file: chat.js ~ line 15 ~ Chat ~ currentUser", currentUser);
   const username = currentUser && currentUser.user.username;
@@ -35,7 +35,7 @@ function Room() {
 
   const fetchRooms = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/rooms", {
+      const res = await fetch(`${ENDPOINT}/api/rooms`, {
         mode: "cors",
       });
       console.log(res, "res////////");
@@ -49,27 +49,27 @@ function Room() {
 
   // const isFirstRun = useRef(true);
 
-  useEffect(() => {
-    // if (isFirstRun.current) {
-    //   isFirstRun.current = false;
-    //   return;
-    // }
-    console.log("socket usereffect got called");
-    socket = io(ENDPOINT, {
-      transports: ["websocket", "polling", "flashsocket"],
-    });
-    // socket.emit("join", currentUser.user.username);
-    // console.log(socket, "socket");
-    if (currentUser) {
-      socket.emit("join", username);
-      // unamount
-      // return () => {
-      //   socket.emit("disconnect");
-      //   // turn off the user that just left
-      //   socket.off();
-      // };
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   // if (isFirstRun.current) {
+  //   //   isFirstRun.current = false;
+  //   //   return;
+  //   // }
+  //   console.log("socket usereffect got called");
+  //   socket = io(ENDPOINT, {
+  //     transports: ["websocket", "polling", "flashsocket"],
+  //   });
+  //   // socket.emit("join", currentUser.user.username);
+  //   // console.log(socket, "socket");
+  //   if (currentUser) {
+  //     socket.emit("join", username);
+  //     // unamount
+  //     // return () => {
+  //     //   socket.emit("disconnect");
+  //     //   // turn off the user that just left
+  //     //   socket.off();
+  //     // };
+  //   }
+  // }, [currentUser]);
 
   const handleLogOut = () => {
     setCurrentUser("");
@@ -80,10 +80,10 @@ function Room() {
   const deleteUser = (e) => {
     if (currentUser) {
       try {
-        fetch(`http://localhost:5000/api/delete/${id}`, {
+        fetch(`${ENDPOINT}/api/delete/${id}`, {
           mode: "cors",
           method: "POST",
-          acition: `http://localhost:5000/api/delete/${id}`,
+          // acition: `http://localhost:5000/api/delete/${id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: authHeader(),
@@ -104,12 +104,11 @@ function Room() {
   const createRoom = async (e) => {
     console.log("create room");
     console.log(Room, "Room");
-
     try {
-      const data = await fetch(`http://localhost:5000/api/create-room`, {
+      const data = await fetch(`${ENDPOINT}/api/create-room`, {
         mode: "cors",
         method: "POST",
-        acition: `http://localhost:5000/api/create-room`,
+        // acition: ``${ENDPOINT}/api/create-room``,
         headers: {
           "Content-Type": "application/json",
           Authorization: authHeader(),
@@ -132,11 +131,23 @@ function Room() {
   // if there are already rooms to choose, this functin gets called
   const moveToAnotherRoom = () => {
     console.log(Room, "Room before moving onto another component////////////");
+    console.log(roomID, "roomID moving onto another component////////////");
     const currnetURL = history.location.pathname;
-    history.push(`${currnetURL}/${Room}`);
+    history.push({
+      pathname: `${currnetURL}/${Room}`,
+      state: { roomInfo: { roomName: Room, roomID } },
+    });
   };
 
-  // console.log(rooms, "rooms////////////");
+  const getID = (e) => {
+    // we need room id to get all messages in the room
+    const selectedIndex = e.target.options.selectedIndex;
+    console.log(
+      e.target.options[selectedIndex].getAttribute("id"),
+      'e.target.options[selectedIndex].getAttribute("id")'
+    );
+    setRoomID(e.target.options[selectedIndex].getAttribute("id"));
+  };
 
   return (
     <div className="container">
@@ -159,10 +170,13 @@ function Room() {
               name="room"
               value={Room}
               className="form-control"
-              onChange={(e) => setRoom(e.target.value)}
+              onChange={(e) => {
+                getID(e);
+                setRoom(e.target.value);
+              }}
             >
               {rooms.map((room) => (
-                <option key={room._id} value={room.roomSlug}>
+                <option key={room._id} id={room._id} value={room.roomSlug}>
                   {room.roomName}
                 </option>
               ))}

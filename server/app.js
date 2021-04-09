@@ -30,8 +30,8 @@ const io = socketio(server);
 io.on("connect", (socket) => {
   // console.log("user joined");
 
-  socket.on("join", (username) => {
-    console.log(`${username} joined!//`);
+  socket.on("join", (username, roomName) => {
+    console.log(`${username} joined! in ${roomName} room //`);
   });
 
   socket.on("disconnect", () => {
