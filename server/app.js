@@ -18,6 +18,8 @@ db.on("error", console.error.bind(console, "mongo connection error"));
 var indexRouter = require("./routes/index");
 
 var cors = require("cors");
+const room = require("./models/room");
+const { text } = require("express");
 // const { Server } = require("tls");
 var app = express();
 app.use(cors());
@@ -30,8 +32,26 @@ const io = socketio(server);
 io.on("connect", (socket) => {
   // console.log("user joined");
 
-  socket.on("join", (username, roomName) => {
-    console.log(`${username} joined! in ${roomName} room //`);
+  socket.on("join", ({ username, roomName }) => {
+    // console.log("new user joined");
+    console.log(`${username} has joined!`);
+    console.log(`$in ${roomName}`);
+    socket.join(roomName);
+    // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined
+    socket.emit("message", {
+      text: `${username} welcome to ${roomName}!`,
+    });
+    //sending to all clients except sender, e,g, when new user joines, this message will send out to all the users except the user who just joined.
+    socket.broadcast
+      .to(roomName)
+      .emit("message", { text: `${username} has joined!` });
+  });
+
+  // get message from the front server
+  socket.on("messeageSent", ({ msg, room }) => {
+    console.log("msg");
+    // send message all the users in the room that was passed in from the client sever
+    io.to(room).emit("message", { msg });
   });
 
   socket.on("disconnect", () => {
