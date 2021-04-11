@@ -67,6 +67,64 @@ exports.get_rooms = async (req, res, next) => {
   // });
 };
 
+exports.get_messages = async (req, res, next) => {
+  try {
+    // what is the best way to grab one document by id
+    // const room = await Room.findOne({ _id: req.body.roomID });
+    const room = await Room.findById(req.params.roomID);
+    if (room) {
+      res.status(200).json(room);
+      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+    } else {
+      console.log("No document matches the provided query.");
+    }
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
+};
+
+exports.post_message = async (req, res, next) => {
+  console.log(req.body, "req.body/////");
+  try {
+    // what is the best way to grab one document by id
+    // const room = await Room.findOne({ _id: req.body.roomID });
+    const room = await Room.findById(req.body.roomID);
+    if (room) {
+      // updateOne is more optimized https://stackoverflow.com/questions/3961322/best-practice-for-updating-a-mongodb-collection-with-unknown-modified-fields
+      const updatedRoom = await room.updateOne({
+        $set: { messages: [...room.messages, req.body.message] },
+      });
+      console.log(
+        "🚀 ~ file: controller.js ~ line 97 ~ exports.post_message= ~ updatedRoom",
+        updatedRoom
+      );
+      // room.messages([...room.messages, req.body.message])
+      // await room.save()
+      res.status(200).json(updatedRoom);
+      // console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+    } else {
+      console.log("No document matches the provided query.");
+    }
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
+  // const room = new Room({
+  //   roomName: req.body.roomname,
+  //   // messages: [],
+  //   createdDate: moment().tz("Asia/Tokyo").format("lll"),
+  // });
+  // const savedRoom = await newRoom.save();
+  // console.log(newRoom, "newRoom/////////");
+  // if (!newRoom) throw Error("Something went wrong saving the user");
+  // res.status(200).json({
+  //   // savedRoom,
+  //   id: savedRoom.id,
+  //   roomName: savedRoom.roomName,
+  //   // createdDate: savedRoom.createdDate,
+  //   roomSlug: savedRoom.roomSlug,
+  // });
+};
+
 exports.post_create_room = async (req, res, next) => {
   console.log(req.body, "req.body/////");
   // Validate and santise the name field.

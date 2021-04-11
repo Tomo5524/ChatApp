@@ -42,9 +42,6 @@ router.get("/", function (req, res, next) {
   res.send("hiya");
 });
 
-router.get("/api/rooms", Controllers.get_rooms);
-router.post("/api/login", Controllers.post_login);
-
 router.post("/api/sign-up", async (req, res, next) => {
   console.log(req.body, "req.body called////////////");
   // console.log("sign-up gets called////////////");
@@ -99,6 +96,10 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
 });
 
+router.get("/api/rooms", Controllers.get_rooms);
+router.post("/api/login", Controllers.post_login);
+router.get("/api/messages/:roomID", Controllers.get_messages);
+router.post("/api/send-message", Controllers.post_message);
 router.post("/api/create-room", Controllers.post_create_room);
 router.post("/api/delete/:id", Controllers.post_delete);
 

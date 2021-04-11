@@ -122,7 +122,11 @@ function Room() {
       setRoom("");
       // console.log(history, "history");
       const currnetURL = history.location.pathname;
-      history.push(`${currnetURL}/${room.roomSlug}`);
+      history.push({
+        pathname: `${currnetURL}/${room.roomSlug}`,
+        state: { roomInfo: { roomName: room.roomName, roomID: room.id } },
+      });
+      // history.push(`${currnetURL}/${room.roomSlug}`);
     } catch (err) {
       console.error(err);
     }
@@ -133,6 +137,7 @@ function Room() {
     console.log(Room, "Room before moving onto another component////////////");
     console.log(roomID, "roomID moving onto another component////////////");
     const currnetURL = history.location.pathname;
+    // at this point, Room is roomSlug
     history.push({
       pathname: `${currnetURL}/${Room}`,
       state: { roomInfo: { roomName: Room, roomID } },
@@ -153,13 +158,13 @@ function Room() {
     <div className="container">
       <h2>Welcome to Chat App</h2>
       {currentUser ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
-      <button className="btn btn-primary" onClick={handleLogOut}>
+      <a className="btn btn-primary" onClick={handleLogOut}>
         Log out
-      </button>
+      </a>
       <form>
-        <button className="btn btn-danger" onClick={deleteUser}>
+        <a className="btn btn-danger" onClick={deleteUser}>
           User Delete
-        </button>
+        </a>
       </form>
       {/* if room exists, let user choose it, if not, let user create new one. */}
       <div>
@@ -194,7 +199,7 @@ function Room() {
               onChange={(e) => setRoom(e.target.value)}
               required
             />
-            <button onClick={createRoom} className="big-button">
+            <button role="button" onClick={createRoom} className="big-button">
               Add room
             </button>
           </div>
