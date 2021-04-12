@@ -7,6 +7,7 @@ function Home() {
   const [currentUser, setCurrentUser] = useState(getUser());
   console.log("🚀 ~ file: home.js ~ line 8 ~ Home ~ currentUser", currentUser);
   const username = currentUser && currentUser.user.username;
+  const userID = currentUser && currentUser.user.id;
 
   {
     /* <Redirect to={`/chat/${username}`} /> */
@@ -16,7 +17,7 @@ function Home() {
     <Redirect
       to={{
         pathname: `/chat/${currentUser.user.userSlug}`,
-        props: { username },
+        userInfo: { username, userID },
       }}
     />
   ) : (

@@ -16,29 +16,35 @@ let socket;
 
 function Chat(props) {
   console.log("chat got called");
-  // console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
-  const { roomName, roomID } = props.location.state.roomInfo;
+  console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
+  // roomName needed so in server, I can broadcast message to the all users in the room
+  // roomID is crutial and will help grab the room by its ID in server
+  const { roomName, roomID } =
+    props.location.state.roomInfo && props.location.state.roomInfo;
+  // const { username, userID } =
+  //   props.location.state.userInfo && props.location.state.userInfo;
   // const { roomName, roomID } = "test";
   // console.log(
   //   "🚀 ~ file: chat.js ~ line 13 ~ Chat ~ room, roomID",
   //   roomName,
   //   roomID
   // );
-  console.log("chat got called");
-  const [currentUser, setCurrentUser] = useState("");
+  // const [currentUser, setCurrentUser] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   let history = useHistory();
+  const currentUser = getUser();
   const username = currentUser && currentUser.user.username;
-  const id = currentUser && currentUser.user.id;
+  // const id = currentUser && currentUser.user.id;
   const ENDPOINT = "http://localhost:5000";
 
-  useEffect(() => {
-    console.log("first user effect got called");
-    setCurrentUser(getUser());
-    // grab all messages in this room from back end
-    fetchMessages();
-  }, []);
+  // useEffect(() => {
+  //   console.log("first user effect got called");
+  //   // setCurrentUser(getUser());
+  //   // grab all messages in this room from back end
+  //   console.log("fetch messages called/////");
+  //   fetchMessages();
+  // }, []);
 
   useEffect(() => {
     // if (isFirstRun.current) {
@@ -48,37 +54,54 @@ function Chat(props) {
     // if (currentUser) {
 
     // }
+    fetchMessages();
     console.log("socket usereffect got called");
     socket = io(ENDPOINT, {
       transports: ["websocket", "polling", "flashsocket"],
     });
     // socket.emit("join", currentUser.user.username);
     // console.log(socket, "socket");
-    if (currentUser) {
-      socket.emit("join", { username, roomName });
-      // unamount
-      // return () => {
-      //   socket.emit("disconnect");
-      //   // turn off the user that just left
-      //   socket.off();
-      // };
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
+    socket.emit("join", { username, roomName });
     socket.on("message", (msg) => {
       // grab messages from API
-
-      console.log(msg, "msg");
+      console.log(messages, "messages//// after get the message from server");
+      setMessages((messages) => [...messages, msg.text]);
+      // setMessages([...messages, msg.text]);
+      // messages.push(msg.text);
+      // console.log(messages, "messages//// after get the message from server");
+      console.log(msg, "message got from client////");
     });
-  }, [messages]);
+    // unamount
+    // return () => {
+    //   socket.emit("disconnect");
+    //   // turn off the user that just left
+    //   socket.off();
+    // };
+    // onMount
+  }, []);
+
+  // useEffect(() => {
+  //   socket.on("message", (msg) => {
+  //     // grab messages from API
+  //     console.log(messages, "messages//// after get the message from server");
+  //     setMessages([...messages, msg.text]);
+  //     // console.log(messages, "messages//// after get the message from server");
+  //     console.log(msg, "message got from client////");
+  //   });
+  // }, []);
+
+  const handleLogOut = () => {
+    // setCurrentUser("");
+    logOut();
+    // isFirstRun.current = true;
+  };
 
   const fetchMessages = async () => {
     try {
       const data = await fetch(`${ENDPOINT}/api/messages/${roomID}`, {
         mode: "cors",
       });
-      console.log(data, "res////////");
+      // console.log(data, "res////////");
       const res = await data.json();
       console.log("🚀 ~ file: chat.js ~ line 84 ~ fetchMessages ~ res", res);
       setMessages(res.messages);
@@ -86,12 +109,11 @@ function Chat(props) {
       console.log("something went wrong when fetching");
       console.log(e);
     }
-  };
-
-  const handleLogOut = () => {
-    setCurrentUser("");
-    logOut();
-    // isFirstRun.current = true;
+    // socket.on("message", (msg) => {
+    //   // grab messages from API
+    //   setMessages([...messages, msg.text]);
+    //   console.log(msg, "message got from client");
+    // });
   };
 
   const sendMessage = async (e) => {
@@ -116,6 +138,9 @@ function Chat(props) {
           "🚀 ~ file: chat.js ~ line 113 ~ sendMessage ~ newMessage",
           newMessage
         );
+        // send message to server
+        socket.emit("messeageSent", { message, roomName });
+        console.log(messages, "messages right after fetch");
         setMessages([...messages, message]);
         setMessage("");
         console.log("message is successful!");

@@ -51,7 +51,8 @@ exports.get_rooms = async (req, res, next) => {
       console.log("No document matches the provided query.");
     }
   } catch (err) {
-    console.error(`Failed to find and delete document: ${err}`);
+    console.log("in get rooms");
+    console.error(`Failed to find and document for all the rooms: ${err}`);
   }
   // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
   //   if (err) {
@@ -74,12 +75,15 @@ exports.get_messages = async (req, res, next) => {
     const room = await Room.findById(req.params.roomID);
     if (room) {
       res.status(200).json(room);
-      console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+      console.log(
+        `Successfully grabbed the document (messages of the currnet room): ${room}.`
+      );
     } else {
       console.log("No document matches the provided query.");
     }
   } catch (err) {
-    console.error(`Failed to find and delete document: ${err}`);
+    console.log("in get messages");
+    console.error(`Failed to find and document: ${err}`);
   }
 };
 
@@ -103,6 +107,7 @@ exports.post_message = async (req, res, next) => {
       res.status(200).json(updatedRoom);
       // console.log(`Successfully deleted document that had the form: ${Rooms}.`);
     } else {
+      console.log("in post message");
       console.log("No document matches the provided query.");
     }
   } catch (err) {

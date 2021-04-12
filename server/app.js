@@ -36,7 +36,8 @@ io.on("connect", (socket) => {
     // console.log("new user joined");
     console.log(`${username} has joined!`);
     console.log(`$in ${roomName}`);
-    // socket.join(roomName);
+    socket.join(roomName);
+
     // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined
     socket.emit("message", {
       text: `${username} welcome to ${roomName}!`,
@@ -45,14 +46,16 @@ io.on("connect", (socket) => {
     socket.broadcast
       .to(roomName)
       .emit("message", { text: `${username} has joined!` });
-    socket.join(roomName);
+
+    // socket.join(roomName);
   });
 
   // get message from the front server
-  socket.on("messeageSent", ({ msg, room }) => {
-    console.log("msg");
+  socket.on("messeageSent", ({ message, roomName }) => {
+    console.log(message, "msg");
+    console.log(roomName, "roomName");
     // send message all the users in the room that was passed in from the client sever
-    io.to(room).emit("message", { msg });
+    io.to(room).emit("message", { message });
   });
 
   socket.on("disconnect", () => {
