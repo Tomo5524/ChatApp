@@ -15,6 +15,7 @@ import {
 let socket;
 
 function Chat(props) {
+  console.log(socket, "socket///////");
   console.log("chat got called");
   console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
   // roomName needed so in server, I can broadcast message to the all users in the room
@@ -31,6 +32,7 @@ function Chat(props) {
   // );
   // const [currentUser, setCurrentUser] = useState("");
   const [message, setMessage] = useState("");
+  // const [output, setOutput] = useState("");
   const [messages, setMessages] = useState([]);
   let history = useHistory();
   const currentUser = getUser();
@@ -38,13 +40,13 @@ function Chat(props) {
   // const id = currentUser && currentUser.user.id;
   const ENDPOINT = "http://localhost:5000";
 
-  // useEffect(() => {
-  //   console.log("first user effect got called");
-  //   // setCurrentUser(getUser());
-  //   // grab all messages in this room from back end
-  //   console.log("fetch messages called/////");
-  //   fetchMessages();
-  // }, []);
+  useEffect(() => {
+    // console.log("first user effect got called");
+    // setCurrentUser(getUser());
+    // grab all messages in this room from back end
+    console.log("fetch messages called/////");
+    fetchMessages();
+  }, []);
 
   useEffect(() => {
     // if (isFirstRun.current) {
@@ -54,7 +56,6 @@ function Chat(props) {
     // if (currentUser) {
 
     // }
-    fetchMessages();
     console.log("socket usereffect got called");
     socket = io(ENDPOINT, {
       transports: ["websocket", "polling", "flashsocket"],
@@ -62,15 +63,16 @@ function Chat(props) {
     // socket.emit("join", currentUser.user.username);
     // console.log(socket, "socket");
     socket.emit("join", { username, roomName });
-    socket.on("message", (msg) => {
-      // grab messages from API
-      console.log(messages, "messages//// after get the message from server");
-      setMessages((messages) => [...messages, msg.text]);
-      // setMessages([...messages, msg.text]);
-      // messages.push(msg.text);
-      // console.log(messages, "messages//// after get the message from server");
-      console.log(msg, "message got from client////");
-    });
+
+    // socket.on("message", (msg) => {
+    //   // grab messages from API
+    //   console.log(msg, "msg from server/////////////////////////////");
+    //   console.log(messages, "messages//// after get the message from server");
+    //   setMessages([...messages, msg.message]);
+    //   // setMessages([...messages, msg.text]);
+    //   // messages.push(msg.text);
+    //   // console.log(messages, "messages//// after get the message from server");
+    // });
     // unamount
     // return () => {
     //   socket.emit("disconnect");
@@ -80,15 +82,17 @@ function Chat(props) {
     // onMount
   }, []);
 
-  // useEffect(() => {
-  //   socket.on("message", (msg) => {
-  //     // grab messages from API
-  //     console.log(messages, "messages//// after get the message from server");
-  //     setMessages([...messages, msg.text]);
-  //     // console.log(messages, "messages//// after get the message from server");
-  //     console.log(msg, "message got from client////");
-  //   });
-  // }, []);
+  useEffect(() => {
+    socket.on("message", (msg) => {
+      // grab messages from API
+      console.log(msg, "msg from server");
+      console.log(messages, "messages//// after get the message from server");
+      setMessages([...messages, msg.message]);
+      // setMessages([...messages, msg.text]);
+      // messages.push(msg.text);
+      // console.log(messages, "messages//// after get the message from server");
+    });
+  }, []);
 
   const handleLogOut = () => {
     // setCurrentUser("");
@@ -104,6 +108,7 @@ function Chat(props) {
       // console.log(data, "res////////");
       const res = await data.json();
       console.log("🚀 ~ file: chat.js ~ line 84 ~ fetchMessages ~ res", res);
+      console.log(messages, "message right before fetch////////");
       setMessages(res.messages);
     } catch (e) {
       console.log("something went wrong when fetching");
@@ -119,37 +124,41 @@ function Chat(props) {
   const sendMessage = async (e) => {
     e.preventDefault();
     console.log("sendMessage/////////");
-    // const res = await fetch(`${baseURL}/api/login`
-    try {
-      const data = await fetch("http://localhost:5000/api/send-message", {
-        mode: "cors",
-        method: "POST",
-        acition: "https://leapintofuture.com/api/send-message",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message, roomID }),
-      });
-      const newMessage = await data.json();
-      // const m = await newMessage.json();
-      // console.log(m, "m/////////////"); caused catch
-      if (newMessage) {
-        console.log(
-          "🚀 ~ file: chat.js ~ line 113 ~ sendMessage ~ newMessage",
-          newMessage
-        );
-        // send message to server
-        socket.emit("messeageSent", { message, roomName });
-        console.log(messages, "messages right after fetch");
-        setMessages([...messages, message]);
-        setMessage("");
-        console.log("message is successful!");
-        // return;
-      } else {
-        console.log("message failed");
+    // make sure empty string is invalid
+    if (message) {
+      // send message to server
+      socket.emit("messeageSent", { message, roomName });
+      console.log(message, "message sent to server//////////");
+      console.log(messages, "messages right after fetch");
+      setMessages([...messages, message]);
+      setMessage("");
+      // const res = await fetch(`${baseURL}/api/login`
+      try {
+        const data = await fetch("http://localhost:5000/api/send-message", {
+          mode: "cors",
+          method: "POST",
+          acition: "https://leapintofuture.com/api/send-message",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message, roomID }),
+        });
+        const newMessage = await data.json();
+        // const m = await newMessage.json();
+        // console.log(m, "m/////////////"); caused catch
+        if (newMessage) {
+          console.log(
+            "🚀 ~ file: chat.js ~ line 113 ~ sendMessage ~ newMessage",
+            newMessage
+          );
+          console.log("message is successful!");
+          // return;
+        } else {
+          console.log("message failed");
+        }
+      } catch (e) {
+        console.log("something went wrong with the server. Try again later");
       }
-    } catch (e) {
-      console.log("something went wrong with the server. Try again later");
     }
   };
 

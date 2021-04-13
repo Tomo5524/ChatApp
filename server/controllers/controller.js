@@ -75,9 +75,9 @@ exports.get_messages = async (req, res, next) => {
     const room = await Room.findById(req.params.roomID);
     if (room) {
       res.status(200).json(room);
-      console.log(
-        `Successfully grabbed the document (messages of the currnet room): ${room}.`
-      );
+      // console.log(
+      //   `Successfully grabbed the document (messages of the currnet room): ${room}.`
+      // );
     } else {
       console.log("No document matches the provided query.");
     }
@@ -98,10 +98,10 @@ exports.post_message = async (req, res, next) => {
       const updatedRoom = await room.updateOne({
         $set: { messages: [...room.messages, req.body.message] },
       });
-      console.log(
-        "🚀 ~ file: controller.js ~ line 97 ~ exports.post_message= ~ updatedRoom",
-        updatedRoom
-      );
+      // console.log(
+      //   "🚀 ~ file: controller.js ~ line 97 ~ exports.post_message= ~ updatedRoom",
+      //   updatedRoom
+      // );
       // room.messages([...room.messages, req.body.message])
       // await room.save()
       res.status(200).json(updatedRoom);

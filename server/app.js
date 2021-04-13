@@ -40,12 +40,12 @@ io.on("connect", (socket) => {
 
     // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined
     socket.emit("message", {
-      text: `${username} welcome to ${roomName}!`,
+      message: `${username} welcome to ${roomName}!`,
     });
     //sending to all clients except sender, e,g, when new user joines, this message will send out to all the users except the user who just joined.
     socket.broadcast
       .to(roomName)
-      .emit("message", { text: `${username} has joined!` });
+      .emit("message", { message: `${username} has joined!` });
 
     // socket.join(roomName);
   });
@@ -54,8 +54,9 @@ io.on("connect", (socket) => {
   socket.on("messeageSent", ({ message, roomName }) => {
     console.log(message, "msg");
     console.log(roomName, "roomName");
+    console.log(message, "messageSent//////");
     // send message all the users in the room that was passed in from the client sever
-    io.to(room).emit("message", { message });
+    io.to(roomName).emit("message", { text });
   });
 
   socket.on("disconnect", () => {
