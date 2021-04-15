@@ -92,11 +92,11 @@ exports.post_message = async (req, res, next) => {
   try {
     // what is the best way to grab one document by id
     // const room = await Room.findOne({ _id: req.body.roomID });
-    const room = await Room.findById(req.body.roomID);
+    const room = await Room.findById(req.body.outputMessage.roomID);
     if (room) {
       // updateOne is more optimized https://stackoverflow.com/questions/3961322/best-practice-for-updating-a-mongodb-collection-with-unknown-modified-fields
       const updatedRoom = await room.updateOne({
-        $set: { messages: [...room.messages, req.body.message] },
+        $set: { messages: [...room.messages, req.body.outputMessage] },
       });
       // console.log(
       //   "🚀 ~ file: controller.js ~ line 97 ~ exports.post_message= ~ updatedRoom",

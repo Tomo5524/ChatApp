@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 // import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
+import RoomID from "./utils/roomID";
 
 import { useHistory } from "react-router-dom";
 // import io from "socket.io-client";
@@ -144,15 +145,15 @@ function Room() {
     });
   };
 
-  const getID = (e) => {
-    // we need room id to get all messages in the room
-    const selectedIndex = e.target.options.selectedIndex;
-    console.log(
-      e.target.options[selectedIndex].getAttribute("id"),
-      'e.target.options[selectedIndex].getAttribute("id")'
-    );
-    setRoomID(e.target.options[selectedIndex].getAttribute("id"));
-  };
+  // const getID = (e) => {
+  //   // we need room id to get all messages in the room
+  //   const selectedIndex = e.target.options.selectedIndex;
+  //   // console.log(
+  //   //   e.target.options[selectedIndex].getAttribute("id"),
+  //   //   'e.target.options[selectedIndex].getAttribute("id")'
+  //   // );
+  //   setRoomID(e.target.options[selectedIndex].getAttribute("id"));
+  // };
 
   return (
     <div className="container">
@@ -176,7 +177,7 @@ function Room() {
               value={Room}
               className="form-control"
               onChange={(e) => {
-                getID(e);
+                setRoomID(RoomID(e));
                 setRoom(e.target.value);
               }}
             >

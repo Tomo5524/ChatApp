@@ -4,6 +4,7 @@ import { authHeader, logOut, getUser } from "../services/auth";
 import "../chatUI.css";
 import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
+import Message from "./message";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,9 +16,9 @@ import {
 let socket;
 
 function Chat(props) {
-  console.log(socket, "socket///////");
-  console.log("chat got called");
-  console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
+  // console.log(socket, "socket///////");
+  // console.log("chat got called");
+  // console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
   // roomName needed so in server, I can broadcast message to the all users in the room
   // roomID is crutial and will help grab the room by its ID in server
   const { roomName, roomID } =
@@ -34,9 +35,11 @@ function Chat(props) {
   const [message, setMessage] = useState("");
   // const [output, setOutput] = useState("");
   const [messages, setMessages] = useState([]);
+  // const [isSender, setIsSender] = useState(true);
   let history = useHistory();
   const currentUser = getUser();
   const username = currentUser && currentUser.user.username;
+  console.log("🚀 ~ file: chat.js ~ line 42 ~ Chat ~ username", username);
   // const id = currentUser && currentUser.user.id;
   const ENDPOINT = "http://localhost:5000";
 
@@ -63,16 +66,17 @@ function Chat(props) {
     // socket.emit("join", currentUser.user.username);
     // console.log(socket, "socket");
     socket.emit("join", { username, roomName });
+    socket.on("welcomeMessage", (msg) => {
+      // grab messages from API
+      console.log(msg, "msg from server");
+      console.log(msg.message, "msg.message from server");
+      msg.username = username; // set currentusername as user
+      console.log(messages, "messages//// after get the message from server");
+      setMessages([...messages, msg]);
+      // messages.push(msg.text);
+      // console.log(messages, "messages//// after get the message from server");
+    });
 
-    // socket.on("message", (msg) => {
-    //   // grab messages from API
-    //   console.log(msg, "msg from server/////////////////////////////");
-    //   console.log(messages, "messages//// after get the message from server");
-    //   setMessages([...messages, msg.message]);
-    //   // setMessages([...messages, msg.text]);
-    //   // messages.push(msg.text);
-    //   // console.log(messages, "messages//// after get the message from server");
-    // });
     // unamount
     // return () => {
     //   socket.emit("disconnect");
@@ -87,12 +91,11 @@ function Chat(props) {
       // grab messages from API
       console.log(msg, "msg from server");
       console.log(messages, "messages//// after get the message from server");
-      setMessages([...messages, msg.message]);
-      // setMessages([...messages, msg.text]);
+      setMessages([...messages, msg]);
       // messages.push(msg.text);
       // console.log(messages, "messages//// after get the message from server");
     });
-  }, []);
+  }, [messages]);
 
   const handleLogOut = () => {
     // setCurrentUser("");
@@ -107,9 +110,10 @@ function Chat(props) {
       });
       // console.log(data, "res////////");
       const res = await data.json();
-      console.log("🚀 ~ file: chat.js ~ line 84 ~ fetchMessages ~ res", res);
+      // console.log("🚀 ~ file: chat.js ~ line 84 ~ fetchMessages ~ res", res);
       console.log(messages, "message right before fetch////////");
-      setMessages(res.messages);
+      setMessages((messages) => [...res.messages, ...messages]);
+      // setMessages(res.messages);
     } catch (e) {
       console.log("something went wrong when fetching");
       console.log(e);
@@ -128,11 +132,12 @@ function Chat(props) {
     if (message) {
       // send message to server
       socket.emit("messeageSent", { message, roomName });
-      console.log(message, "message sent to server//////////");
+      console.log(message, "message right before sent to server//////////");
       console.log(messages, "messages right after fetch");
-      setMessages([...messages, message]);
+      // setMessages([...messages, message]);
       setMessage("");
       // const res = await fetch(`${baseURL}/api/login`
+      const outputMessage = { message, username, roomID };
       try {
         const data = await fetch("http://localhost:5000/api/send-message", {
           mode: "cors",
@@ -141,7 +146,7 @@ function Chat(props) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ message, roomID }),
+          body: JSON.stringify({ outputMessage }),
         });
         const newMessage = await data.json();
         // const m = await newMessage.json();
@@ -162,8 +167,9 @@ function Chat(props) {
     }
   };
 
-  console.log(message, "message////////");
-  console.log(messages, "messages////////");
+  // console.log(message, "message////////");
+  // console.log(messages, "messages////////");
+  // console.log(isSender, "isSender//////");
 
   return (
     <div className="page-content page-container" id="page-content">
@@ -219,16 +225,33 @@ function Chat(props) {
                 </div>
                 {/* <h4>Hiya</h4> */}
                 {/* paste sample code below */}
-                <div className="media media-chat media-chat-reverse">
-                  <div className="media-body">
-                    {messages.map((msg, idx) => (
-                      <p key={idx}>{msg}</p>
-                    ))}
-                  </div>
-                  {/* <p className="meta">
+                {/* <div className="media media-chat media-chat-reverse">
+                  <div className="media-body"> */}
+                {messages.map(
+                  (msg, idx) => (
+                    <div key={idx}>
+                      <Message msg={msg} userName={username} />
+                    </div>
+                  )
+                  /* isSender ? (
+                    <div className="media media-chat">
+                      <div className="media-body">
+                        <p key={idx}>{msg.message}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="media media-chat media-chat-reverse">
+                      <div className="media-body">
+                        <p key={idx}>{msg.message}</p>
+                      </div>
+                    </div>
+                  ) */
+                )}
+                {/* </div> */}
+                {/* <p className="meta">
                         <time datetime="2018">00:06</time>
                       </p> */}
-                </div>
+                {/* </div> */}
                 <div
                   className="ps-scrollbar-x-rail"
                   style={{ left: "0px", bottom: "0px" }}

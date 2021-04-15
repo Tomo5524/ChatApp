@@ -11,7 +11,11 @@ const socketio = require("socket.io");
 const mongoose = require("mongoose");
 // needs model module
 const mongoDb = process.env.MONGODB_URL;
-mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect(mongoDb, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
@@ -39,25 +43,34 @@ io.on("connect", (socket) => {
     socket.join(roomName);
 
     // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined
-    socket.emit("message", {
+    socket.emit("welcomeMessage", {
       message: `${username} welcome to ${roomName}!`,
+      username,
     });
     //sending to all clients except sender, e,g, when new user joines, this message will send out to all the users except the user who just joined.
     socket.broadcast
       .to(roomName)
-      .emit("message", { message: `${username} has joined!` });
+      .emit("message", { message: `${username} has joined!`, username });
 
     // socket.join(roomName);
+    // get message from the front server
+    socket.on("messeageSent", ({ message, roomName }) => {
+      console.log(message, "msg");
+      console.log(roomName, "roomName");
+      console.log(message, "messageSent//////");
+      // send message all the users in the room that was passed in from the client sever
+      io.to(roomName).emit("message", { message, username });
+    });
   });
 
-  // get message from the front server
-  socket.on("messeageSent", ({ message, roomName }) => {
-    console.log(message, "msg");
-    console.log(roomName, "roomName");
-    console.log(message, "messageSent//////");
-    // send message all the users in the room that was passed in from the client sever
-    io.to(roomName).emit("message", { text });
-  });
+  // // get message from the front server
+  // socket.on("messeageSent", ({ message, roomName }) => {
+  //   console.log(message, "msg");
+  //   console.log(roomName, "roomName");
+  //   console.log(message, "messageSent//////");
+  //   // send message all the users in the room that was passed in from the client sever
+  //   io.to(roomName).emit("message", { message }, username);
+  // });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
