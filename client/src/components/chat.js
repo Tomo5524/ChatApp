@@ -216,7 +216,11 @@ function Chat(props) {
                     <p>Hiii, I'm good.</p>
                     <p>How are you doing?</p>
                     <p>
-                      Long time no see! Tomorrow office. will be free on sunday.
+                      asjflsadjfjasdfjklasdjfkladjslfjaksdjflajsdfkljsdklfjkalsjdfkaklsdfjaklsdjfklajsdfklajsdlkfjaskdlfjaklsdjfklasdjfklajsfklajsdlfkjaksdlfjkdsjfklsdjkljfklsdjfklsdjflksdjflksdjfklsdjfkldjsfklsdjfklsdjflksdjfklsdjfklsdjfklsdjfklsdjkldsjfkldjskljfklsdjfklsjdkldjsklsdjfklsdjfkldsjfklsdjfklsdjfklsjfklsdjfklsdjfdklsjfklsdjfklsdjfksdjfkldsjfklsdfjsdlfkj
+                      {/* Long time no see! Tomorrow office. will be free on sunday.
+                      sadfsdfdsaf asjadsjf sjs safj lsadj aslfds fds f dsf ds h
+                      asd hdsdsj dsj dkls;djs kl; dskj l;sj ds lj ladsflj df
+                      jlsdj l;adsj lkdsj ds l; lfj ;sj kl;asj s */}
                     </p>
                     <p className="meta">
                       <time datetime="2018">00:06</time>
@@ -229,9 +233,7 @@ function Chat(props) {
                   <div className="media-body"> */}
                 {messages.map(
                   (msg, idx) => (
-                    <div key={idx}>
-                      <Message msg={msg} userName={username} />
-                    </div>
+                    <Message key={idx} msg={msg} userName={username} />
                   )
                   /* isSender ? (
                     <div className="media media-chat">

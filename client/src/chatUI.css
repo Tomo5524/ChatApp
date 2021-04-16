@@ -89,6 +89,7 @@ h4.card-title {
   touch-action: auto;
   overflow: hidden !important;
   -ms-overflow-style: none;
+  margin: 20px 0;
 }
 
 .media-chat {
@@ -122,7 +123,7 @@ h4.card-title {
 .media-chat .media-body {
   -webkit-box-flex: initial;
   flex: initial;
-  display: table;
+  /* display: table; */
 }
 
 .media-body {
@@ -160,12 +161,6 @@ h4.card-title {
   font-weight: 400;
 }
 
-.media {
-  padding: 16px 12px;
-  -webkit-transition: background-color 0.2s linear;
-  transition: background-color 0.2s linear;
-}
-
 .media-meta-day::before {
   margin-right: 16px;
 }
@@ -195,21 +190,38 @@ h4.card-title {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: reverse;
   flex-direction: row-reverse;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .media-chat {
   padding-right: 64px;
   margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .media {
-  padding: 16px 12px;
+  /* padding: 16px 12px;
+  padding-right: 64px;
+  padding-left: 12px; */
+  padding-top: 0;
+  padding-bottom: 0;
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;
 }
 
+.media-chat-non-reverse {
+  /* box-sizing: border-box; */
+  padding-right: 64px;
+  padding-left: 12px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .media-chat.media-chat-reverse .media-body p {
   float: right;
+  margin: 15px 0;
   clear: right;
   background-color: #48b0f7;
   color: #fff;

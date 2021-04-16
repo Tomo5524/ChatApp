@@ -20,7 +20,7 @@ const Message = ({ msg, userName }) => {
           </div>
         </div>
       ) : (
-        <div className="media media-chat">
+        <div className="media media-chat media-chat-non-reverse">
           <div className="media-body">
             <p>{msg.message}</p>
           </div>

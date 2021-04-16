@@ -14,13 +14,16 @@ function Room() {
   console.log("room got called");
   const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
+  // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
+  const [roomsLoaded, setRoomsLoaded] = useState(false);
   // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
-  // pass in roominfo to chat componnet so room messages can be extracted from its id
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
-  // console.log("🚀 ~ file: chat.js ~ line 15 ~ Chat ~ currentUser", currentUser);
-  const username = currentUser && currentUser.user.username;
-  const id = currentUser && currentUser.user.id;
+  // pass in roominfo to chat componnet so room messages can be extracted from its id
+  const { username, id } = currentUser && currentUser.user;
+  // console.log(currentUser.user);
+  // const username = currentUser && currentUser.user.username;
+  // const id = currentUser && currentUser.user.id;
   // console.log(id, "id");
 
   let history = useHistory();
@@ -43,6 +46,7 @@ function Room() {
       const data = await res.json();
       console.log(data, "data/////");
       setRooms(data);
+      setRoomsLoaded(true);
     } catch (e) {
       console.log(e);
     }
@@ -135,25 +139,23 @@ function Room() {
 
   // if there are already rooms to choose, this functin gets called
   const moveToAnotherRoom = () => {
-    console.log(Room, "Room before moving onto another component////////////");
-    console.log(roomID, "roomID moving onto another component////////////");
-    const currnetURL = history.location.pathname;
-    // at this point, Room is roomSlug
-    history.push({
-      pathname: `${currnetURL}/${Room}`,
-      state: { roomInfo: { roomName: Room, roomID } },
-    });
+    // if there is no room that is choosen by user, don't proceed
+    if (Room) {
+      console.log(
+        Room,
+        "Room before moving onto another component////////////"
+      );
+      console.log(roomID, "roomID moving onto another component////////////");
+      const currnetURL = history.location.pathname;
+      // at this point, Room is roomSlug
+      history.push({
+        pathname: `${currnetURL}/${Room}`,
+        state: { roomInfo: { roomName: Room, roomID } },
+      });
+    }
   };
 
-  // const getID = (e) => {
-  //   // we need room id to get all messages in the room
-  //   const selectedIndex = e.target.options.selectedIndex;
-  //   // console.log(
-  //   //   e.target.options[selectedIndex].getAttribute("id"),
-  //   //   'e.target.options[selectedIndex].getAttribute("id")'
-  //   // );
-  //   setRoomID(e.target.options[selectedIndex].getAttribute("id"));
-  // };
+  // console.log(Room, "Room");
 
   return (
     <div className="container">
@@ -169,42 +171,67 @@ function Room() {
       </form>
       {/* if room exists, let user choose it, if not, let user create new one. */}
       <div>
-        {rooms && rooms.length !== 0 ? (
-          <div className="col-6 form-group">
-            <label for="room">Room: </label>
-            <select
-              name="room"
-              value={Room}
-              className="form-control"
-              onChange={(e) => {
-                setRoomID(RoomID(e));
-                setRoom(e.target.value);
-              }}
-            >
-              {rooms.map((room) => (
-                <option key={room._id} id={room._id} value={room.roomSlug}>
-                  {room.roomName}
-                </option>
-              ))}
-            </select>
-            <button onClick={moveToAnotherRoom} className="big-button">
-              Go to room
-            </button>
-          </div>
-        ) : (
-          <div className="col-6">
-            <label for="room">Room</label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setRoom(e.target.value)}
-              required
-            />
-            <button role="button" onClick={createRoom} className="big-button">
-              Add room
-            </button>
-          </div>
-        )}
+        {
+          roomsLoaded ? (
+            rooms && rooms.length !== 0 ? (
+              <div className="col-6 form-group">
+                <label for="room">Room: </label>
+                <select
+                  name="room"
+                  value={Room}
+                  className="form-control"
+                  onChange={(e) => {
+                    setRoomID(RoomID(e));
+                    setRoom(e.target.value);
+                  }}
+                >
+                  <option value="" selected disabled hidden>
+                    Choose Room
+                  </option>
+                  {rooms.map((room) => (
+                    <option key={room._id} id={room._id} value={room.roomSlug}>
+                      {room.roomName}
+                    </option>
+                  ))}
+                </select>
+                <button onClick={moveToAnotherRoom} className="big-button">
+                  Go to room
+                </button>
+                <div className="col-6 mt-4">
+                  <label for="room">Room</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => setRoom(e.target.value)}
+                    required
+                  />
+                  <button onClick={createRoom} className="big-button">
+                    Add room
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="col-6">
+                <label for="room">Room</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  onChange={(e) => setRoom(e.target.value)}
+                  required
+                />
+                <button onClick={createRoom} className="big-button">
+                  Add room
+                </button>
+              </div>
+            )
+          ) : null
+          // (
+          //   <div>
+          //     {/* somehting is wrong with db */}
+          //     <h2>Something went wrong 😭</h2>
+          //   </div>
+          // )
+        }
       </div>
     </div>
   );
