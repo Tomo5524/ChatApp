@@ -11,7 +11,7 @@ function App() {
       {/* <h1>Hello World</h1> */}
       {/* <BrowserRouter basename={process.env.PUBLIC_URL}> */}
       <Router>
-        <div className="container">
+        <div>
           {/* <NavBar /> */}
           {/* <Signup /> */}
           <Switch>

@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 // import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
-import "../chatUI.css";
+import "./style/chatUI.css";
 import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
 import Message from "./message";
+// import ScrollToBottom from "react-scroll-to-bottom";
+import ScrollableFeed from "react-scrollable-feed";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,8 +23,9 @@ function Chat(props) {
   // console.log("🚀 ~ file: chat.js ~ line 11 ~ Chat ~ props", props);
   // roomName needed so in server, I can broadcast message to the all users in the room
   // roomID is crutial and will help grab the room by its ID in server
+  console.log(props.location);
   const { roomName, roomID } =
-    props.location.state.roomInfo && props.location.state.roomInfo;
+    props.location.state !== undefined && props.location.state.roomInfo;
   // const { username, userID } =
   //   props.location.state.userInfo && props.location.state.userInfo;
   // const { roomName, roomID } = "test";
@@ -39,7 +42,9 @@ function Chat(props) {
   let history = useHistory();
   const currentUser = getUser();
   const username = currentUser && currentUser.user.username;
-  console.log("🚀 ~ file: chat.js ~ line 42 ~ Chat ~ username", username);
+  // console.log("🚀 ~ file: chat.js ~ line 42 ~ Chat ~ username", username);
+  const messagesEndRef = useRef(null);
+
   // const id = currentUser && currentUser.user.id;
   const ENDPOINT = "http://localhost:5000";
 
@@ -86,6 +91,14 @@ function Chat(props) {
     // onMount
   }, []);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({
+      // behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  };
+
   useEffect(() => {
     socket.on("message", (msg) => {
       // grab messages from API
@@ -95,6 +108,7 @@ function Chat(props) {
       // messages.push(msg.text);
       // console.log(messages, "messages//// after get the message from server");
     });
+    scrollToBottom();
   }, [messages]);
 
   const handleLogOut = () => {
@@ -173,11 +187,10 @@ function Chat(props) {
 
   return (
     <div className="page-content page-container" id="page-content">
-      <h1>Hiya</h1>
-      <div className="padding">
+      <div className="container">
         <div className="row container d-flex justify-content-center">
           <div className="col-md-6">
-            <div className="card card-bordered">
+            <div className="card card-bordered vh-100">
               <div className="card-header">
                 <h4 className="card-title">
                   <strong>Chat</strong>
@@ -187,12 +200,8 @@ function Chat(props) {
                 </a>
               </div>
               <div
-                className="ps-container ps-theme-default ps-active-y"
+                className="ps-container ps-theme-default ps-active-y vh-100 overflow-auto"
                 id="chat-content"
-                style={{
-                  overflowY: "scroll !important",
-                  height: "400px !important",
-                }}
               >
                 {/* chat box starts here */}
                 <div className="media media-chat">
@@ -216,11 +225,7 @@ function Chat(props) {
                     <p>Hiii, I'm good.</p>
                     <p>How are you doing?</p>
                     <p>
-                      asjflsadjfjasdfjklasdjfkladjslfjaksdjflajsdfkljsdklfjkalsjdfkaklsdfjaklsdjfklajsdfklajsdlkfjaskdlfjaklsdjfklasdjfklajsfklajsdlfkjaksdlfjkdsjfklsdjkljfklsdjfklsdjflksdjflksdjfklsdjfkldjsfklsdjfklsdjflksdjfklsdjfklsdjfklsdjfklsdjkldsjfkldjskljfklsdjfklsjdkldjsklsdjfklsdjfkldsjfklsdjfklsdjfklsjfklsdjfklsdjfdklsjfklsdjfklsdjfksdjfkldsjfklsdfjsdlfkj
-                      {/* Long time no see! Tomorrow office. will be free on sunday.
-                      sadfsdfdsaf asjadsjf sjs safj lsadj aslfds fds f dsf ds h
-                      asd hdsdsj dsj dkls;djs kl; dskj l;sj ds lj ladsflj df
-                      jlsdj l;adsj lkdsj ds l; lfj ;sj kl;asj s */}
+                      Long time no see! Tomorrow office. will be free on sunday.
                     </p>
                     <p className="meta">
                       <time datetime="2018">00:06</time>
@@ -231,6 +236,7 @@ function Chat(props) {
                 {/* paste sample code below */}
                 {/* <div className="media media-chat media-chat-reverse">
                   <div className="media-body"> */}
+
                 {messages.map(
                   (msg, idx) => (
                     <Message key={idx} msg={msg} userName={username} />
@@ -249,6 +255,7 @@ function Chat(props) {
                     </div>
                   ) */
                 )}
+                <div ref={messagesEndRef} />
                 {/* </div> */}
                 {/* <p className="meta">
                         <time datetime="2018">00:06</time>

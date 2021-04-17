@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 // import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
 import RoomID from "./utils/roomID";
-
+import "./style/room.css";
 import { useHistory } from "react-router-dom";
 // import io from "socket.io-client";
 
@@ -158,81 +158,97 @@ function Room() {
   // console.log(Room, "Room");
 
   return (
-    <div className="container">
+    <div className="container vh-100">
       <h2>Welcome to Chat App</h2>
       {currentUser ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
-      <a className="btn btn-primary" onClick={handleLogOut}>
+      {/* <a className="btn btn-primary" onClick={handleLogOut}>
         Log out
       </a>
       <form>
         <a className="btn btn-danger" onClick={deleteUser}>
           User Delete
         </a>
-      </form>
+      </form> */}
       {/* if room exists, let user choose it, if not, let user create new one. */}
-      <div>
-        {
-          roomsLoaded ? (
-            rooms && rooms.length !== 0 ? (
-              <div className="col-6 form-group">
-                <label for="room">Room: </label>
-                <select
-                  name="room"
-                  value={Room}
-                  className="form-control"
-                  onChange={(e) => {
-                    setRoomID(RoomID(e));
-                    setRoom(e.target.value);
-                  }}
-                >
-                  <option value="" selected disabled hidden>
-                    Choose Room
-                  </option>
-                  {rooms.map((room) => (
-                    <option key={room._id} id={room._id} value={room.roomSlug}>
-                      {room.roomName}
-                    </option>
-                  ))}
-                </select>
-                <button onClick={moveToAnotherRoom} className="big-button">
-                  Go to room
-                </button>
-                <div className="col-6 mt-4">
-                  <label for="room">Room</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    onChange={(e) => setRoom(e.target.value)}
-                    required
-                  />
-                  <button onClick={createRoom} className="big-button">
-                    Add room
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="col-6">
-                <label for="room">Room</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  onChange={(e) => setRoom(e.target.value)}
-                  required
-                />
-                <button onClick={createRoom} className="big-button">
-                  Add room
-                </button>
-              </div>
-            )
-          ) : null
-          // (
-          //   <div>
-          //     {/* somehting is wrong with db */}
-          //     <h2>Something went wrong 😭</h2>
-          //   </div>
-          // )
-        }
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box">
+            <h1>
+              {currentUser ? (
+                <h4>Welcomeback {username}!</h4>
+              ) : (
+                <h2>No User</h2>
+              )}
+            </h1>
+            <p class="text-muted"> Please choose room!</p>
+            {
+              roomsLoaded ? (
+                rooms && rooms.length !== 0 ? (
+                  <div className="d-block text-center">
+                    <label for="room">Room: </label>
+                    <select
+                      name="room"
+                      value={Room}
+                      onChange={(e) => {
+                        setRoomID(RoomID(e));
+                        setRoom(e.target.value);
+                      }}
+                    >
+                      <option value="" selected disabled hidden>
+                        Choose Room
+                      </option>
+                      {rooms.map((room) => (
+                        <option
+                          key={room._id}
+                          id={room._id}
+                          value={room.roomSlug}
+                        >
+                          {room.roomName}
+                        </option>
+                      ))}
+                    </select>
+                    <button onClick={moveToAnotherRoom} className="big-button">
+                      Go to room
+                    </button>
+                    {/* <div className="col-6 mt-4">
+                      <label for="room">Room</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        onChange={(e) => setRoom(e.target.value)}
+                        required
+                      />
+                      <button onClick={createRoom} className="big-button">
+                        Add room
+                      </button>
+                    </div> */}
+                  </div>
+                ) : (
+                  <div className="col-6">
+                    <label for="room">Room</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      onChange={(e) => setRoom(e.target.value)}
+                      required
+                    />
+                    <button onClick={createRoom} className="big-button">
+                      Add room
+                    </button>
+                  </div>
+                )
+              ) : null
+              // (
+              //   <div>
+              //     {/* somehting is wrong with db */}
+              //     <h2>Something went wrong 😭</h2>
+              //   </div>
+              // )
+            }
+          </div>
+        </div>
       </div>
+      <div></div>
     </div>
   );
 }

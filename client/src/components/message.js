@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 const Message = ({ msg, userName }) => {
   // console.log("🚀 ~ file: message.js ~ line 4 ~ Message ~ userName", userName);
@@ -12,17 +12,17 @@ const Message = ({ msg, userName }) => {
   // console.log("🚀 ~ file: message.js ~ line 6 ~ Message ~ isSender", isSender);
 
   return (
-    <div>
+    <div className="messages">
       {isSender ? (
-        <div className="media media-chat media-chat-reverse">
-          <div className="media-body">
-            <p>{msg.message}</p>
+        <div className="messageContainer justify-content-end">
+          <div className="messageBox backgroundBlue">
+            <p className="messageText colorWhite">{msg.message}</p>
           </div>
         </div>
       ) : (
-        <div className="media media-chat media-chat-non-reverse">
-          <div className="media-body">
-            <p>{msg.message}</p>
+        <div className="messageContainer justify-content-start">
+          <div className="messageBox backgroundLight">
+            <p className="messageText colorDark">{msg.message}</p>
           </div>
         </div>
       )}
