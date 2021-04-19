@@ -1,9 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 // import renderHTML from "react-render-html";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 function Login() {
+  const { user, setUser } = useContext(UserContext);
   const [username, settUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errMessage, setError] = useState("");
@@ -28,10 +30,13 @@ function Login() {
       const currentUser = await res.json();
       if (currentUser.token) {
         console.log(currentUser, "currentUser");
+        // console.log(currentUser.token, "currentUser.token");
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        setUser(currentUser);
+        console.log("set user after login");
         // history.push("/");
-        history.push(`/chat/${currentUser.token.userSlug}`);
-        window.location.reload();
+        history.push(`/chat/${currentUser.user.userSlug}`);
+        // window.location.reload();
         // return;
       } else {
         console.log(currentUser);
@@ -49,8 +54,8 @@ function Login() {
   let error = useRef(); // grab html element
 
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit}>
+    <div className="container vh-100">
+      {/* <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label for="username">Username</label>
           <input
@@ -76,7 +81,33 @@ function Login() {
         <button type="submit" className="btn btn-primary">
           Login
         </button>
-      </form>
+      </form> */}
+      <div class="col-md-6">
+        <div class="card">
+          <form onSubmit={handleSubmit} class="box">
+            <h1>Login</h1>
+            <p class="text-muted">Please enter your login and password!</p>
+            <input
+              type="text"
+              name="username"
+              onChange={(e) => settUsername(e.target.value)}
+              placeholder="Username"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            <input type="submit" value="Login" />
+            <div ref={error} className="error-container d-block pb-4">
+              <h3 className="m-0">{errMessage}</h3>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

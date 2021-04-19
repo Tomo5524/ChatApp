@@ -11,12 +11,13 @@ function authHeader() {
 
 function logOut() {
   localStorage.removeItem("currentUser");
-  window.location.reload();
+  // caused an error that brings user back to sign-up component
+  // window.location.reload();
 }
 
-function getUser() {
+const getUser = () => {
   return JSON.parse(localStorage.getItem("currentUser"));
-}
+};
 
 // export default { authHeader, logOut, getUser };
 export { authHeader, logOut, getUser };

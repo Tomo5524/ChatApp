@@ -1,19 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 // import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
 import "./style/chatUI.css";
 import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
 import Message from "./message";
-// import ScrollToBottom from "react-scroll-to-bottom";
-import ScrollableFeed from "react-scrollable-feed";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPaperclip,
   faPaperPlane,
   faSmile,
 } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../UserContext";
 
 let socket;
 
@@ -40,8 +38,12 @@ function Chat(props) {
   const [messages, setMessages] = useState([]);
   // const [isSender, setIsSender] = useState(true);
   let history = useHistory();
-  const currentUser = getUser();
-  const username = currentUser && currentUser.user.username;
+  const { user, setUser } = useContext(UserContext);
+  const username = user && user.user.username;
+  ///////
+  // const currentUser = getUser();
+  // const username = currentUser && currentUser.user.username;
+  //////
   // console.log("🚀 ~ file: chat.js ~ line 42 ~ Chat ~ username", username);
   const messagesEndRef = useRef(null);
 
@@ -80,6 +82,7 @@ function Chat(props) {
       setMessages([...messages, msg]);
       // messages.push(msg.text);
       // console.log(messages, "messages//// after get the message from server");
+      // socket.emit("disconnect", { username, roomName });
     });
 
     // unamount
@@ -111,11 +114,11 @@ function Chat(props) {
     scrollToBottom();
   }, [messages]);
 
-  const handleLogOut = () => {
-    // setCurrentUser("");
-    logOut();
-    // isFirstRun.current = true;
-  };
+  // const handleLogOut = () => {
+  //   // setCurrentUser("");
+  //   logOut();
+  //   // isFirstRun.current = true;
+  // };
 
   const fetchMessages = async () => {
     try {
@@ -204,7 +207,7 @@ function Chat(props) {
                 id="chat-content"
               >
                 {/* chat box starts here */}
-                <div className="media media-chat">
+                {/* <div className="media media-chat">
                   {" "}
                   <img
                     className="avatar"
@@ -231,7 +234,7 @@ function Chat(props) {
                       <time datetime="2018">00:06</time>
                     </p>
                   </div>
-                </div>
+                </div> */}
                 {/* <h4>Hiya</h4> */}
                 {/* paste sample code below */}
                 {/* <div className="media media-chat media-chat-reverse">

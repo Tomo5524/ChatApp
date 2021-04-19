@@ -1,32 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 // import Signup from "./sign-up";
 import { authHeader, logOut, getUser } from "../services/auth";
+import { UserContext } from "../UserContext";
 
 function Home() {
-  const [currentUser, setCurrentUser] = useState(getUser());
-  console.log("🚀 ~ file: home.js ~ line 8 ~ Home ~ currentUser", currentUser);
-  const username = currentUser && currentUser.user.username;
-  const userID = currentUser && currentUser.user.id;
+  // const [currentUser, setCurrentUser] = useState(getUser());
+  const { user, setUser } = useContext(UserContext);
+  console.log("🚀 ~ file: home.js ~ line 10 ~ Home ~ user", user);
+  const username = user && user.user.username;
+  console.log("🚀 ~ file: home.js ~ line 12 ~ Home ~ username", username);
+  const userID = user && user.user.id;
+
+  // console.log(userID, "userID in room");
 
   {
     /* <Redirect to={`/chat/${username}`} /> */
   }
-  return currentUser ? (
+  return user ? (
     // if user already logged in, navigate to chat component
     <Redirect
       to={{
-        pathname: `/chat/${currentUser.user.userSlug}`,
+        pathname: `/chat/${user.user.userSlug}`,
         userInfo: { username, userID },
       }}
     />
   ) : (
-    <div className="cotainer">
-      <h1 className="display-1">Welcome Hiya!</h1>
-      <Link to={"/sign-up"}>
-        <button className="btn btn-primary">Sign Up</button>
-      </Link>
-    </div>
+    <Redirect to={"/sign-up"} />
+    // <div className="cotainer vh-100">
+    //   <h1 className="display-1">Welcome Hiya!</h1>
+    //   <Link to={"/sign-up"}>
+    //     <button className="btn btn-primary">Sign Up</button>
+    //   </Link>
+    // </div>
   );
 }
 

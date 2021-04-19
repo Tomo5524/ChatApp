@@ -1,18 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 // import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
 import RoomID from "./utils/roomID";
 import "./style/room.css";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+import CreateRoom from "./createRoom";
 // import io from "socket.io-client";
+import { UserContext } from "../UserContext";
 
 // let socket;
 
 function Room() {
+  const { user, setUser } = useContext(UserContext);
+  console.log("🚀 ~ file: room.js ~ line 15 ~ Room ~ user", user);
   // console.log(localStorage, "locastorage");
   // const [username, settUsername] = useState("");
   console.log("room got called");
-  const [currentUser, setCurrentUser] = useState("");
+  // const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
   // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
   const [roomsLoaded, setRoomsLoaded] = useState(false);
@@ -20,10 +24,10 @@ function Room() {
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
   // pass in roominfo to chat componnet so room messages can be extracted from its id
-  const { username, id } = currentUser && currentUser.user;
+  // const { username, id } = user && user.user;
   // console.log(currentUser.user);
-  // const username = currentUser && currentUser.user.username;
-  // const id = currentUser && currentUser.user.id;
+  const username = user && user.user.username;
+  const id = user && user.user._id;
   // console.log(id, "id");
 
   let history = useHistory();
@@ -32,7 +36,7 @@ function Room() {
   useEffect(() => {
     console.log("first user effect got called");
     // get current user
-    setCurrentUser(getUser());
+    // setCurrentUser(getUser());
     // grab rooms from back end
     fetchRooms();
   }, []);
@@ -77,13 +81,15 @@ function Room() {
   // }, [currentUser]);
 
   const handleLogOut = () => {
-    setCurrentUser("");
+    setUser(null);
     logOut();
+    console.log("logout called");
+    history.push("/sign-up");
     // isFirstRun.current = true;
   };
 
   const deleteUser = (e) => {
-    if (currentUser) {
+    if (user) {
       try {
         fetch(`${ENDPOINT}/api/delete/${id}`, {
           mode: "cors",
@@ -106,36 +112,40 @@ function Room() {
   };
 
   // if there is no room to select, let user create a new room and navigate to chat component
-  const createRoom = async (e) => {
-    console.log("create room");
-    console.log(Room, "Room");
-    try {
-      const data = await fetch(`${ENDPOINT}/api/create-room`, {
-        mode: "cors",
-        method: "POST",
-        // acition: ``${ENDPOINT}/api/create-room``,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authHeader(),
-        },
-        body: JSON.stringify({ roomname: Room }),
-      });
-      console.log("🚀 ~ file: chat.js ~ line 118 ~ createRoom ~ room", data);
-      const room = await data.json();
-      console.log(room, "room/////");
-      e.preventDefault();
-      setRoom("");
-      // console.log(history, "history");
-      const currnetURL = history.location.pathname;
-      history.push({
-        pathname: `${currnetURL}/${room.roomSlug}`,
-        state: { roomInfo: { roomName: room.roomName, roomID: room.id } },
-      });
-      // history.push(`${currnetURL}/${room.roomSlug}`);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const createRoom = async (e) => {
+  //   console.log("create room");
+  //   console.log(Room, "Room");
+  //   if (Room) {
+  //     try {
+  //       const data = await fetch(`${ENDPOINT}/api/create-room`, {
+  //         mode: "cors",
+  //         method: "POST",
+  //         // acition: ``${ENDPOINT}/api/create-room``,
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: authHeader(),
+  //         },
+  //         body: JSON.stringify({ roomname: Room }),
+  //       });
+  //       console.log("🚀 ~ file: chat.js ~ line 118 ~ createRoom ~ room", data);
+  //       const room = await data.json();
+  //       console.log(room, "room/////");
+  //       e.preventDefault();
+  //       setRoom("");
+  //       // console.log(history, "history");
+  //       const currnetURL = history.location.pathname;
+  //       history.push({
+  //         pathname: `${currnetURL}/${room.roomSlug}`,
+  //         state: { roomInfo: { roomName: room.roomName, roomID: room.id } },
+  //       });
+  //       // history.push(`${currnetURL}/${room.roomSlug}`);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   } else {
+  //     console.log("room name is not valid");
+  //   }
+  // };
 
   // if there are already rooms to choose, this functin gets called
   const moveToAnotherRoom = () => {
@@ -160,7 +170,6 @@ function Room() {
   return (
     <div className="container vh-100">
       <h2>Welcome to Chat App</h2>
-      {currentUser ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
       {/* <a className="btn btn-primary" onClick={handleLogOut}>
         Log out
       </a>
@@ -170,25 +179,31 @@ function Room() {
         </a>
       </form> */}
       {/* if room exists, let user choose it, if not, let user create new one. */}
-      <div class="row">
-        <div class="col-md-6">
-          <div class="box">
+      <div class="col-md-6">
+        <div class="box">
+          <div className="d-flex justify-content-end">
+            <button className="btn btn-primary" onClick={handleLogOut}>
+              Log out
+            </button>
+            <form>
+              <a className="btn btn-danger ml-2" onClick={deleteUser}>
+                User Delete
+              </a>
+            </form>
+          </div>
+          <div className="p-4">
             <h1>
-              {currentUser ? (
-                <h4>Welcomeback {username}!</h4>
-              ) : (
-                <h2>No User</h2>
-              )}
+              {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
             </h1>
             <p class="text-muted"> Please choose room!</p>
             {
               roomsLoaded ? (
                 rooms && rooms.length !== 0 ? (
-                  <div className="d-block text-center">
-                    <label for="room">Room: </label>
+                  <div className="form-box">
                     <select
                       name="room"
                       value={Room}
+                      className="p-1 mb-3"
                       onChange={(e) => {
                         setRoomID(RoomID(e));
                         setRoom(e.target.value);
@@ -207,34 +222,35 @@ function Room() {
                         </option>
                       ))}
                     </select>
-                    <button onClick={moveToAnotherRoom} className="big-button">
+                    <button
+                      onClick={moveToAnotherRoom}
+                      className="big-button mb-5"
+                    >
                       Go to room
                     </button>
-                    {/* <div className="col-6 mt-4">
-                      <label for="room">Room</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        onChange={(e) => setRoom(e.target.value)}
-                        required
-                      />
-                      <button onClick={createRoom} className="big-button">
-                        Add room
-                      </button>
-                    </div> */}
+                    <Link
+                      to={{
+                        pathname: "/create-room",
+                        // state: { setRoom, createRoom },
+                        state: { baseURL: history.location.pathname },
+                      }}
+                    >
+                      <button class="btn text-white">Create a new room</button>
+                    </Link>
                   </div>
                 ) : (
-                  <div className="col-6">
-                    <label for="room">Room</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      onChange={(e) => setRoom(e.target.value)}
-                      required
-                    />
-                    <button onClick={createRoom} className="big-button">
-                      Add room
-                    </button>
+                  <div>
+                    <h3 className="text-white">
+                      We don't have any rooms to chat in. Create a new one!
+                    </h3>
+                    <Link
+                      to={{
+                        pathname: "/create-room",
+                        state: { baseURL: history.location.pathname },
+                      }}
+                    >
+                      <button class="btn text-white">Create a new room</button>
+                    </Link>
                   </div>
                 )
               ) : null
@@ -248,7 +264,6 @@ function Room() {
           </div>
         </div>
       </div>
-      <div></div>
     </div>
   );
 }

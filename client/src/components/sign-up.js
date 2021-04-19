@@ -1,9 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 // import renderHTML from "react-render-html";
 // import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+import "./style/sign-up.css";
+import { UserContext } from "../UserContext";
 
 function Signup() {
+  const { user, setUser } = useContext(UserContext);
   const [username, settUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpass, setConfirmpass] = useState("");
@@ -39,15 +42,18 @@ function Signup() {
           console.log("🚀 ~ file: sign-up.js ~ line 39 ~ res", res);
           // if user successfully sign up
           if (res.token) {
+            setUser(res);
             console.log(res.user.username, "res.user.username");
+            localStorage.setItem("currentUser", JSON.stringify(res));
             history.push(`/chat/${res.user.userSlug}`);
             // history.push(`/chat/${res.user.username}`); wrong
             console.log(res, "currentUser");
-            localStorage.setItem("currentUser", JSON.stringify(res));
+            // localStorage.setItem("currentUser", JSON.stringify(res));
             // return
           }
           // can connect database but something went wrong, etc, username already is taken
           else {
+            // res has msg property (error message) sent from server
             seterrMessage(res.msg);
             error.current.classList.add("display");
             setTimeout(() => {
@@ -87,8 +93,8 @@ function Signup() {
   let error = useRef(); // grab html element
 
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit}>
+    <div className="container vh-100">
+      {/* <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label for="username">Username</label>
           <input
@@ -124,7 +130,44 @@ function Signup() {
         <button type="submit" className="btn btn-primary">
           Sign Up
         </button>
-      </form>
+      </form> */}
+
+      <div class="col-md-6">
+        <div class="card">
+          <form onSubmit={handleSubmit} class="box">
+            <h1>Sign Up</h1>
+            <p class="text-muted">Please enter your login and password!</p>
+            <input
+              type="text"
+              name="username"
+              onChange={(e) => settUsername(e.target.value)}
+              placeholder="Username"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setConfirmpass(e.target.value)}
+              placeholder="Confirm password"
+              required
+            />
+            {/* <a class="forgot text-muted" href="#">
+              Forgot password?
+            </a> */}
+            <input type="submit" value="Sign Up" />
+            <Link to="/login">
+              <button class="btn text-white">Already have an account</button>
+            </Link>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

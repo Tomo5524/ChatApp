@@ -72,8 +72,13 @@ io.on("connect", (socket) => {
   //   io.to(roomName).emit("message", { message }, username);
   // });
 
+  // socket.on("disconnect", ({ username, roomName }) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    // socket.broadcast
+    //   .to(roomName)
+    //   .emit("message", { message: `${username} has left the chat!`, username });
+
     // console.log(`${username} disconnected!//`);
   });
 });
