@@ -11,7 +11,6 @@ import { authHeader, logOut, getUser } from "./services/auth";
 
 function App() {
   const [user, setUser] = useState(getUser());
-  // const value = useMemo(() => ({ user, setUser }), [user, setUser]);
   console.log("🚀 ~ file: App.js ~ line 14 ~ App ~ user", user);
 
   return (
