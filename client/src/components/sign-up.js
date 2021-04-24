@@ -94,44 +94,6 @@ function Signup() {
 
   return (
     <div className="container vh-100">
-      {/* <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            className="form-control"
-            onChange={(e) => settUsername(e.target.value)}
-            placeholder="Enter Username"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label for="confirmPassword">Confirm Pasword</label>
-          <input
-            type="password"
-            className="form-control"
-            onChange={(e) => setConfirmpass(e.target.value)}
-            placeholder="Enter the same Password ablove to confirm"
-            required
-          />
-        </div>
-        <div ref={error} className="error-container d-block pb-3">
-          <h2 className="m-0">{errMessage}</h2>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Sign Up
-        </button>
-      </form> */}
-
       <div class="col-md-6">
         <div class="card">
           <form onSubmit={handleSubmit} class="box">
