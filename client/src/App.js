@@ -10,6 +10,7 @@ import { UserContext } from "./UserContext";
 import { authHeader, logOut, getUser } from "./services/auth";
 
 function App() {
+  // does this get user in the first render?
   const [user, setUser] = useState(getUser());
   console.log("🚀 ~ file: App.js ~ line 14 ~ App ~ user", user);
 

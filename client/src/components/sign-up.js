@@ -48,7 +48,6 @@ function Signup() {
             history.push(`/chat/${res.user.userSlug}`);
             // history.push(`/chat/${res.user.username}`); wrong
             console.log(res, "currentUser");
-            // localStorage.setItem("currentUser", JSON.stringify(res));
             // return
           }
           // can connect database but something went wrong, etc, username already is taken
