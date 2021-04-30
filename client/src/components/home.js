@@ -12,11 +12,6 @@ function Home() {
   console.log("🚀 ~ file: home.js ~ line 12 ~ Home ~ username", username);
   const userID = user && user.user.id;
 
-  // console.log(userID, "userID in room");
-
-  {
-    /* <Redirect to={`/chat/${username}`} /> */
-  }
   return user ? (
     // if user already logged in, navigate to chat component
     <Redirect
