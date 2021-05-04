@@ -32,7 +32,8 @@ function Room() {
   // console.log(id, "id");
 
   let history = useHistory();
-  const ENDPOINT = "http://localhost:5000";
+  // const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   useEffect(() => {
     console.log("first user effect got called");

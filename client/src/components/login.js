@@ -10,16 +10,16 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errMessage, setError] = useState("");
   let history = useHistory();
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit/////////");
     // const res = await fetch(`${baseURL}/api/login`
     try {
-      const res = await fetch("http://localhost:5000/api/login", {
+      const res = await fetch(`${ENDPOINT}/api/login`, {
         mode: "cors",
         method: "POST",
-        acition: "https://leapintofuture.com/api/login",
         headers: {
           "Content-Type": "application/json",
           Connection: "keep-alive",

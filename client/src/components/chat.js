@@ -49,7 +49,8 @@ function Chat(props) {
   const messagesEndRef = useRef(null);
 
   // const id = currentUser && currentUser.user.id;
-  const ENDPOINT = "http://localhost:5000";
+  // const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   useEffect(() => {
     // console.log("first user effect got called");
@@ -157,10 +158,10 @@ function Chat(props) {
       // const res = await fetch(`${baseURL}/api/login`
       const outputMessage = { message, username, roomID };
       try {
-        const data = await fetch("http://localhost:5000/api/send-message", {
+        const data = await fetch(`${ENDPOINT}/api/send-message`, {
           mode: "cors",
           method: "POST",
-          acition: "https://leapintofuture.com/api/send-message",
+          // acition: `${ENDPOINT}/api/send-message`,
           headers: {
             "Content-Type": "application/json",
           },

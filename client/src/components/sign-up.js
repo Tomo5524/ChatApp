@@ -12,6 +12,7 @@ function Signup() {
   const [confirmpass, setConfirmpass] = useState("");
   const [errMessage, seterrMessage] = useState("");
   let history = useHistory();
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
   // let errorMessage;
 
   console.log(username, "username,/////////");
@@ -26,10 +27,10 @@ function Signup() {
     console.log("handleSubmit/////////");
     if (checkPassword(password, confirmpass)) {
       console.log(password, confirmpass, "password, confirmpass/////////");
-      fetch("http://localhost:5000/api/sign-up", {
+      fetch(`${ENDPOINT}/api/sign-up`, {
         // mode: "cors",
         method: "POST",
-        acition: "http://localhost:5000/api/sign-up",
+        acition: `${ENDPOINT}/api/sign-up`,
         headers: {
           "Content-Type": "application/json",
           // Connection: "keep-alive",

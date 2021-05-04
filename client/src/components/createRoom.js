@@ -12,7 +12,8 @@ function AddRoom(props) {
   const [room, setRoom] = useState("");
 
   let history = useHistory();
-  const ENDPOINT = "http://localhost:5000";
+  // const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   const createRoom = async (e) => {
     console.log("create room");
