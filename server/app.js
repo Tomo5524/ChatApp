@@ -39,7 +39,7 @@ io.on("connect", (socket) => {
   socket.on("join", ({ username, roomName }) => {
     // console.log("new user joined");
     console.log(`${username} has joined!`);
-    console.log(`$in ${roomName}`);
+    // console.log(`$in ${roomName}`);
     socket.join(roomName);
 
     // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined

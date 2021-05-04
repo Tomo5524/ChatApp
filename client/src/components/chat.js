@@ -12,7 +12,7 @@ import {
   faSmile,
 } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../UserContext";
-import Nav from "./nav";
+// import Nav from "./nav";
 
 let socket;
 
@@ -131,6 +131,7 @@ function Chat(props) {
       const res = await data.json();
       // console.log("🚀 ~ file: chat.js ~ line 84 ~ fetchMessages ~ res", res);
       console.log(messages, "message right before fetch////////");
+      console.log(res.messages, "messages from db in first cycle");
       setMessages((messages) => [...res.messages, ...messages]);
       // setMessages(res.messages);
     } catch (e) {
@@ -161,7 +162,7 @@ function Chat(props) {
         const data = await fetch(`${ENDPOINT}/api/send-message`, {
           mode: "cors",
           method: "POST",
-          // acition: `${ENDPOINT}/api/send-message`,
+          acition: `${ENDPOINT}/api/send-message`,
           headers: {
             "Content-Type": "application/json",
           },
@@ -194,7 +195,7 @@ function Chat(props) {
     <div className="page-content page-container pt-4 h-90vh" id="page-content">
       <div className="container h-90">
         <div className="row container d-flex justify-content-center h-100">
-          <div className="col-md-6 h-100">
+          <div className="col-lg-6 h-100">
             <div className="card card-bordered h-100">
               <div className="card-header">
                 <h4 className="card-title">

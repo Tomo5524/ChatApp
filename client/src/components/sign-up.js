@@ -13,6 +13,7 @@ function Signup() {
   const [errMessage, seterrMessage] = useState("");
   let history = useHistory();
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
+  // const ENDPOINT = "http://localhost:5000";
   // let errorMessage;
 
   console.log(username, "username,/////////");
@@ -55,9 +56,9 @@ function Signup() {
           else {
             // res has msg property (error message) sent from server
             seterrMessage(res.msg);
-            error.current.classNameList.add("display");
+            error.current.classList.add("display");
             setTimeout(() => {
-              error.current.classNameList.remove("display");
+              error.current.classList.remove("display");
             }, 4000);
             console.log(errMessage);
           }
@@ -73,18 +74,18 @@ function Signup() {
           // seterrMessage(err.message);
           // seterrMessage("Failed to connect database");
           seterrMessage("Something went wrong");
-          error.current.classNameList.add("display");
+          error.current.classList.add("display");
           setTimeout(() => {
-            error.current.classNameList.remove("display");
+            error.current.classList.remove("display");
           }, 4000);
           console.log(errMessage);
         });
     } else {
       console.log("pass no match");
       seterrMessage("Passwords don't match");
-      error.current.classNameList.add("display");
+      error.current.classList.add("display");
       setTimeout(() => {
-        error.current.classNameList.remove("display");
+        error.current.classList.remove("display");
       }, 4000);
     }
     e.preventDefault();

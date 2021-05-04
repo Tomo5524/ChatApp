@@ -10,6 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errMessage, setError] = useState("");
   let history = useHistory();
+  // const ENDPOINT = "http://localhost:5000";
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   const handleSubmit = async (e) => {
@@ -40,9 +41,9 @@ function Login() {
       } else {
         console.log(currentUser);
         setError(currentUser.message);
-        error.current.classNameList.add("display");
+        error.current.classList.add("display");
         setTimeout(() => {
-          error.current.classNameList.remove("display");
+          error.current.classList.remove("display");
         }, 2000);
       }
     } catch (e) {
