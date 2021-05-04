@@ -7,6 +7,7 @@ import { useHistory, Link } from "react-router-dom";
 import CreateRoom from "./createRoom";
 // import io from "socket.io-client";
 import { UserContext } from "../UserContext";
+import Loader from "./loader";
 
 // let socket;
 
@@ -16,6 +17,7 @@ function Room() {
   // console.log(localStorage, "locastorage");
   // const [username, settUsername] = useState("");
   console.log("room got called");
+  // const [loading, setLoading] = useState(false);
   // const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
   // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
@@ -41,11 +43,12 @@ function Room() {
     // get current user
     // setCurrentUser(getUser());
     // grab rooms from back end
-    fetchRooms();
+    // fetchRooms();
   }, []);
 
   const fetchRooms = async () => {
     try {
+      // setLoading(true);
       const res = await fetch(`${ENDPOINT}/api/rooms`, {
         mode: "cors",
       });
@@ -54,6 +57,7 @@ function Room() {
       console.log(data, "data/////");
       setRooms(data);
       setRoomsLoaded(true);
+      // setLoading(false);
     } catch (e) {
       console.log(e);
     }
@@ -271,7 +275,11 @@ function Room() {
               )}
             </div>
           </div>
-        ) : null}
+        ) : (
+          <div>
+            <Loader />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -52,12 +52,12 @@ function Chat(props) {
   // const ENDPOINT = "http://localhost:5000";
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
-  useEffect(() => {
+  useEffect(async () => {
     // console.log("first user effect got called");
     // setCurrentUser(getUser());
     // grab all messages in this room from back end
     console.log("fetch messages called/////");
-    fetchMessages();
+    await fetchMessages();
   }, []);
 
   useEffect(() => {
