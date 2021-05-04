@@ -23,6 +23,7 @@ function Room() {
   // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
+  console.log("🚀 ~ file: room.js ~ line 26 ~ Room ~ rooms", rooms);
   // pass in roominfo to chat componnet so room messages can be extracted from its id
   // const { username, id } = user && user.user;
   // console.log(currentUser.user);
@@ -35,6 +36,7 @@ function Room() {
 
   useEffect(() => {
     console.log("first user effect got called");
+    // setRoomsLoaded(true);
     // get current user
     // setCurrentUser(getUser());
     // grab rooms from back end
@@ -169,7 +171,6 @@ function Room() {
 
   return (
     <div className="container vh-100">
-      <h2>Welcome to Chat App</h2>
       {/* <a className="btn btn-primary" onClick={handleLogOut}>
         Log out
       </a>
@@ -179,31 +180,22 @@ function Room() {
         </a>
       </form> */}
       {/* if room exists, let user choose it, if not, let user create new one. */}
-      <div class="col-md-6">
-        <div class="box">
-          <div className="d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleLogOut}>
-              Log out
-            </button>
-            <form>
-              <a className="btn btn-danger ml-2" onClick={deleteUser}>
-                User Delete
-              </a>
-            </form>
-          </div>
-          <div className="p-4">
-            <h1>
-              {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
-            </h1>
-            <p class="text-muted"> Please choose room!</p>
-            {
-              roomsLoaded ? (
-                rooms && rooms.length !== 0 ? (
+      {/* <div className="col-12 col-md-10 d-none d-xl-block"> */}
+      <div class="col-12 col-md-6 mx-auto">
+        {roomsLoaded ? (
+          <div class="box">
+            <div className="p-4">
+              <h1>
+                {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
+              </h1>
+              <p class="text-muted p-3"> Please choose room!</p>
+              {rooms && rooms.length !== 0 ? (
+                <>
                   <div className="form-box">
                     <select
                       name="room"
                       value={Room}
-                      className="p-1 mb-3"
+                      className="p-1 mb-4"
                       onChange={(e) => {
                         setRoomID(RoomID(e));
                         setRoom(e.target.value);
@@ -238,10 +230,22 @@ function Room() {
                       <button class="btn text-white">Create a new room</button>
                     </Link>
                   </div>
-                ) : (
+                  <div className="d-flex justify-content-center pt-3">
+                    <button className="btn btn-primary" onClick={handleLogOut}>
+                      Log out
+                    </button>
+                    <form>
+                      <a className="btn btn-danger ml-2" onClick={deleteUser}>
+                        User Delete
+                      </a>
+                    </form>
+                  </div>
+                </>
+              ) : (
+                <>
                   <div>
                     <h3 className="text-white">
-                      We don't have any rooms to chat in. Create a new one!
+                      No rooms to chat in. <br /> Create a new one!
                     </h3>
                     <Link
                       to={{
@@ -252,17 +256,21 @@ function Room() {
                       <button class="btn text-white">Create a new room</button>
                     </Link>
                   </div>
-                )
-              ) : null
-              // (
-              //   <div>
-              //     {/* somehting is wrong with db */}
-              //     <h2>Something went wrong 😭</h2>
-              //   </div>
-              // )
-            }
+                  <div className="d-flex justify-content-center pt-3">
+                    <button className="btn btn-primary" onClick={handleLogOut}>
+                      Log out
+                    </button>
+                    <form>
+                      <a className="btn btn-danger ml-2" onClick={deleteUser}>
+                        User Delete
+                      </a>
+                    </form>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

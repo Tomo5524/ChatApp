@@ -1,0 +1,14 @@
+.box-about {
+  background-image: linear-gradient(to right, #29323c, #485563);
+  text-align: left;
+  transition: 0.25s;
+  border-radius: 10px;
+}
+.square-bullet {
+  list-style-type: square;
+  color: white;
+}
+
+.font-weight-600 {
+  font-weight: 600;
+}

@@ -41,9 +41,9 @@ function Login() {
       } else {
         console.log(currentUser);
         setError(currentUser.message);
-        error.current.classList.add("display");
+        error.current.classNameList.add("display");
         setTimeout(() => {
-          error.current.classList.remove("display");
+          error.current.classNameList.remove("display");
         }, 2000);
       }
     } catch (e) {
@@ -82,31 +82,29 @@ function Login() {
           Login
         </button>
       </form> */}
-      <div class="col-md-6">
-        <div class="card">
-          <form onSubmit={handleSubmit} class="box">
-            <h1>Login</h1>
-            <p class="text-muted">Please enter your login and password!</p>
-            <input
-              type="text"
-              name="username"
-              onChange={(e) => settUsername(e.target.value)}
-              placeholder="Username"
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-            />
-            <input type="submit" value="Login" />
-            <div ref={error} className="error-container d-block pb-4">
-              <h3 className="m-0">{errMessage}</h3>
-            </div>
-          </form>
-        </div>
+      <div className="col-12 col-md-6 mx-auto">
+        <form onSubmit={handleSubmit} className="box p-4">
+          <h1>Login</h1>
+          <p className="text-muted">Please enter your login and password!</p>
+          <input
+            type="text"
+            name="username"
+            onChange={(e) => settUsername(e.target.value)}
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+          <input type="submit" value="Login" />
+          <div ref={error} className="error-container d-block pb-4">
+            <h3 className="m-0">{errMessage}</h3>
+          </div>
+        </form>
       </div>
     </div>
   );

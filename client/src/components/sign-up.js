@@ -54,9 +54,9 @@ function Signup() {
           else {
             // res has msg property (error message) sent from server
             seterrMessage(res.msg);
-            error.current.classList.add("display");
+            error.current.classNameList.add("display");
             setTimeout(() => {
-              error.current.classList.remove("display");
+              error.current.classNameList.remove("display");
             }, 4000);
             console.log(errMessage);
           }
@@ -72,18 +72,18 @@ function Signup() {
           // seterrMessage(err.message);
           // seterrMessage("Failed to connect database");
           seterrMessage("Something went wrong");
-          error.current.classList.add("display");
+          error.current.classNameList.add("display");
           setTimeout(() => {
-            error.current.classList.remove("display");
+            error.current.classNameList.remove("display");
           }, 4000);
           console.log(errMessage);
         });
     } else {
       console.log("pass no match");
       seterrMessage("Passwords don't match");
-      error.current.classList.add("display");
+      error.current.classNameList.add("display");
       setTimeout(() => {
-        error.current.classList.remove("display");
+        error.current.classNameList.remove("display");
       }, 4000);
     }
     e.preventDefault();
@@ -93,41 +93,39 @@ function Signup() {
 
   return (
     <div className="container vh-100">
-      <div class="col-md-6">
-        <div class="card">
-          <form onSubmit={handleSubmit} class="box">
-            <h1>Sign Up</h1>
-            <p class="text-muted">Please enter your login and password!</p>
-            <input
-              type="text"
-              name="username"
-              onChange={(e) => settUsername(e.target.value)}
-              placeholder="Username"
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => setConfirmpass(e.target.value)}
-              placeholder="Confirm password"
-              required
-            />
-            {/* <a class="forgot text-muted" href="#">
+      <div className="col-12 col-md-6 mx-auto">
+        <form onSubmit={handleSubmit} className="box p-4">
+          <h1>Sign Up</h1>
+          <p className="text-muted">Please enter your login and password!</p>
+          <input
+            type="text"
+            name="username"
+            onChange={(e) => settUsername(e.target.value)}
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            onChange={(e) => setConfirmpass(e.target.value)}
+            placeholder="Confirm password"
+            required
+          />
+          {/* <a className="forgot text-muted" href="#">
               Forgot password?
             </a> */}
-            <input type="submit" value="Sign Up" />
-            <Link to="/login">
-              <button class="btn text-white">Already have an account</button>
-            </Link>
-          </form>
-        </div>
+          <input type="submit" value="Sign Up" />
+          <Link to="/login">
+            <button className="btn text-white">Already have an account</button>
+          </Link>
+        </form>
       </div>
     </div>
   );

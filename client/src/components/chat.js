@@ -12,6 +12,7 @@ import {
   faSmile,
 } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../UserContext";
+import Nav from "./nav";
 
 let socket;
 
@@ -189,21 +190,21 @@ function Chat(props) {
   // console.log(isSender, "isSender//////");
 
   return (
-    <div className="page-content page-container" id="page-content">
-      <div className="container">
-        <div className="row container d-flex justify-content-center">
-          <div className="col-md-6">
-            <div className="card card-bordered vh-100">
+    <div className="page-content page-container pt-4 h-90vh" id="page-content">
+      <div className="container h-90">
+        <div className="row container d-flex justify-content-center h-100">
+          <div className="col-md-6 h-100">
+            <div className="card card-bordered h-100">
               <div className="card-header">
                 <h4 className="card-title">
                   <strong>Chat</strong>
                 </h4>{" "}
                 <a className="btn btn-xs btn-secondary" dataAbc="true">
-                  Choose Another Room
+                  Delete This Room
                 </a>
               </div>
               <div
-                className="ps-container ps-theme-default ps-active-y vh-100 overflow-auto"
+                className="ps-container ps-theme-default ps-active-y overflow-auto h-100"
                 id="chat-content"
               >
                 {/* chat box starts here */}
@@ -287,11 +288,11 @@ function Chat(props) {
               </div>
               <div className="publisher bt-1 border-light">
                 {" "}
-                <img
+                {/* <img
                   className="avatar avatar-xs"
                   src="https://img.icons8.com/color/36/000000/administrator-male.png"
                   alt="..."
-                />{" "}
+                />{" "} */}
                 <textarea
                   className="publisher-input"
                   value={message}
