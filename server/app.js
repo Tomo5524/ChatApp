@@ -106,7 +106,7 @@ app.use("/", indexRouter);
 // }
 
 server.listen(process.env.PORT || 5000, () =>
-  console.log(`Server has started.`)
+  console.log(`Server has started on 5000.`)
 );
 
 module.exports = app;
