@@ -15,7 +15,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit/////////");
-    // const res = await fetch(`${baseURL}/api/login`
     try {
       const res = await fetch(`${ENDPOINT}/api/login`, {
         mode: "cors",
