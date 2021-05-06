@@ -94,8 +94,8 @@ function Signup() {
   let error = useRef(); // grab html element
 
   return (
-    <div className="container vh-100">
-      <div className="col-12 col-md-6 mx-auto">
+    <div className="container mid-break-margin h-90vh">
+      <div className="col-md-8 col-lg-6 mx-auto">
         <form onSubmit={handleSubmit} className="box p-4">
           <h1>Sign Up</h1>
           <p className="text-muted">Please enter your login and password!</p>

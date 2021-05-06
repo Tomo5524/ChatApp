@@ -8,6 +8,8 @@ import CreateRoom from "./createRoom";
 // import io from "socket.io-client";
 import { UserContext } from "../UserContext";
 import Loader from "./loader";
+import Progress from "./progress";
+import axios from "axios";
 
 // let socket;
 
@@ -22,6 +24,12 @@ function Room() {
   const [Room, setRoom] = useState("");
   // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
   const [roomsLoaded, setRoomsLoaded] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  console.log(
+    "🚀 ~ file: room.js ~ line 28 ~ Room ~ uploadPercentage",
+    uploadPercentage
+  );
+  const [message, setMessage] = useState("");
   // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
@@ -43,23 +51,46 @@ function Room() {
     // get current user
     // setCurrentUser(getUser());
     // grab rooms from back end
-    // fetchRooms();
+    fetchRooms();
   }, []);
 
   const fetchRooms = async () => {
     try {
       // setLoading(true);
-      const res = await fetch(`${ENDPOINT}/api/rooms`, {
-        mode: "cors",
+      // const res = await fetch(`${ENDPOINT}/api/rooms`, {
+      //   mode: "cors",
+      // });
+      const res = await axios.get(`${ENDPOINT}/api/rooms`, {
+        onDownloadProgress: (progressEvent) => {
+          console.log(
+            "🚀 ~ file: room.js ~ line 70 ~ fetchRooms ~ progressEvent",
+            progressEvent
+          );
+          console.log("progress event got called////////////");
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+        },
       });
-      console.log(res, "res////////");
-      const data = await res.json();
-      console.log(data, "data/////");
-      setRooms(data);
+      // console.log(res, "res////////");
+      // const data = await res.json();
+
+      // Clear percentage
+      // setTimeout(() => setUploadPercentage(0), 10000);
+      console.log(res, "data/////");
+      setRooms(res.data);
       setRoomsLoaded(true);
       // setLoading(false);
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.log(err);
+      if (err.response.status === 500) {
+        setMessage("There was a problem with the server");
+      } else {
+        setMessage(err.response.data.msg);
+      }
+      setUploadPercentage(0);
     }
   };
 
@@ -175,7 +206,7 @@ function Room() {
   // console.log(Room, "Room");
 
   return (
-    <div className="container vh-100">
+    <div className="container mid-break-margin h-90vh">
       {/* <a className="btn btn-primary" onClick={handleLogOut}>
         Log out
       </a>
@@ -186,9 +217,10 @@ function Room() {
       </form> */}
       {/* if room exists, let user choose it, if not, let user create new one. */}
       {/* <div className="col-12 col-md-10 d-none d-xl-block"> */}
-      <div class="col-12 col-md-6 mx-auto">
+      <div class="col-md-8 col-lg-6 mx-auto">
         {roomsLoaded ? (
           <div class="box">
+            {/* {message ? <Message msg={message} /> : null} */}
             <div className="p-4">
               <h1>
                 {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
@@ -276,9 +308,12 @@ function Room() {
             </div>
           </div>
         ) : (
-          <div>
-            <Loader />
-          </div>
+          <>
+            <Progress percentage={uploadPercentage} />
+            <div>hiya</div>
+          </>
+
+          // <Loader />
         )}
       </div>
     </div>

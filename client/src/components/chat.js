@@ -41,11 +41,11 @@ function Chat(props) {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
   const username = user && user.user.username;
-  ///////
-  // const currentUser = getUser();
-  // const username = currentUser && currentUser.user.username;
-  //////
-  // console.log("🚀 ~ file: chat.js ~ line 42 ~ Chat ~ username", username);
+
+  const htmlElRef = useRef(null);
+  const setFocus = () => {
+    htmlElRef.current && htmlElRef.current.focus();
+  };
   const messagesEndRef = useRef(null);
 
   // const id = currentUser && currentUser.user.id;
@@ -77,11 +77,12 @@ function Chat(props) {
     socket.emit("join", { username, roomName });
     socket.on("welcomeMessage", (msg) => {
       // grab messages from API
-      console.log(msg, "msg from server");
-      console.log(msg.message, "msg.message from server");
+      console.log(msg, "msg (welcomeMessage) from server");
+      console.log(msg.message, "msg.message (welcomeMessage) from server");
       msg.username = username; // set currentusername as user
       console.log(messages, "messages//// after get the message from server");
-      setMessages([...messages, msg]);
+      // setMessages([...messages, msg]);
+      setMessages((messages) => [...messages, msg]);
       // messages.push(msg.text);
       // console.log(messages, "messages//// after get the message from server");
       // socket.emit("disconnect", { username, roomName });
@@ -114,6 +115,7 @@ function Chat(props) {
       // console.log(messages, "messages//// after get the message from server");
     });
     scrollToBottom();
+    setFocus();
   }, [messages]);
 
   // const handleLogOut = () => {
@@ -177,6 +179,7 @@ function Chat(props) {
             newMessage
           );
           console.log("message is successful!");
+          // setFocus();
           // return;
         } else {
           console.log("message failed");
@@ -195,7 +198,7 @@ function Chat(props) {
     <div className="page-content page-container pt-4 h-90vh" id="page-content">
       <div className="container h-90">
         <div className="row container d-flex justify-content-center h-100">
-          <div className="col-lg-6 h-100">
+          <div className="col-md-8 col-lg-6 h-100">
             <div className="card card-bordered h-100">
               <div className="card-header">
                 <h4 className="card-title">
@@ -299,6 +302,7 @@ function Chat(props) {
                   className="publisher-input"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
+                  ref={htmlElRef}
                 >
                   Write something
                 </textarea>
@@ -321,14 +325,16 @@ function Chat(props) {
                   <FontAwesomeIcon icon={faSmile} />
                   {/* <i className="fa fa-smile"></i> */}
                 </a>
-                <form onSubmit={sendMessage}>
-                  <button type="submit" className="send-btn">
-                    <a className="publisher-btn text-info" data-abc="true">
-                      <FontAwesomeIcon icon={faPaperPlane} />
-                      {/* <i className="fa fa-paper-plane"></i> */}
-                    </a>
-                  </button>
-                </form>
+                <button
+                  type="submit"
+                  className="send-btn"
+                  onClick={sendMessage}
+                >
+                  <a className="publisher-btn text-info" data-abc="true">
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                    {/* <i className="fa fa-paper-plane"></i> */}
+                  </a>
+                </button>
               </div>
             </div>
           </div>

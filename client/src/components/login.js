@@ -54,7 +54,7 @@ function Login() {
   let error = useRef(); // grab html element
 
   return (
-    <div className="container vh-100">
+    <div className="container mid-break-margin h-90vh">
       {/* <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label for="username">Username</label>
@@ -82,7 +82,7 @@ function Login() {
           Login
         </button>
       </form> */}
-      <div className="col-12 col-md-6 mx-auto">
+      <div className="col-md-8 col-lg-6 mx-auto">
         <form onSubmit={handleSubmit} className="box p-4">
           <h1>Login</h1>
           <p className="text-muted">Please enter your login and password!</p>

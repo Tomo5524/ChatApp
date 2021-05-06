@@ -20,21 +20,19 @@ function App() {
     <div>
       {/* <h1>Hello World</h1> */}
       <Router>
-        <div>
-          {/* makes user a global variable */}
-          <UserContext.Provider value={{ user, setUser }}>
-            <NavBar />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/about" component={About} />
-              <Route path="/sign-up" component={Signup} />
-              <Route path="/login" component={Login} />
-              <Route path="/chat/:userSlug/:roomSlug" component={Chat} />
-              <Route path="/chat/:userSlug" component={Room} />
-              <Route path="/create-room" component={AddRoom} />
-            </Switch>
-          </UserContext.Provider>
-        </div>
+        {/* makes user a global variable */}
+        <UserContext.Provider value={{ user, setUser }}>
+          <NavBar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/about" component={About} />
+            <Route path="/sign-up" component={Signup} />
+            <Route path="/login" component={Login} />
+            <Route path="/chat/:userSlug/:roomSlug" component={Chat} />
+            <Route path="/chat/:userSlug" component={Room} />
+            <Route path="/create-room" component={AddRoom} />
+          </Switch>
+        </UserContext.Provider>
       </Router>
     </div>
   );
