@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { authHeader } from "../services/auth";
+// import { UserContext } from "../UserContext";
 
 function AddRoom(props) {
+  // const { user, setUser } = useContext(UserContext);
   // console.log(props);
   // const { setRoom, createRoom } = props.location;
   // console.log(setRoom, createRoom, "setRoom, createRoom");
@@ -27,7 +29,10 @@ function AddRoom(props) {
           "Content-Type": "application/json",
           Authorization: authHeader(),
         },
-        body: JSON.stringify({ roomname: room }),
+        body: JSON.stringify({
+          roomname: room,
+          userID: props.location.state.userID,
+        }),
       });
       console.log("🚀 ~ file: chat.js ~ line 118 ~ createRoom ~ room", data);
       const newRoom = await data.json();
@@ -47,24 +52,22 @@ function AddRoom(props) {
   };
 
   return (
-    <div className="container vh-100">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="box create-room">
-            <label for="room" className="text-white">
-              Type room name!
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              onChange={(e) => setRoom(e.target.value)}
-              required
-            />
-            <button onClick={createRoom} className="big-button button-center">
-              Add room
-            </button>
-            {/* <button className="big-button">Add room</button> */}
-          </div>
+    <div className="container mid-break-margin h-90vh">
+      <div className="col-md-8 col-lg-6 mx-auto">
+        <div class="box create-room">
+          <label for="room" className="text-white">
+            Type room name!
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            onChange={(e) => setRoom(e.target.value)}
+            required
+          />
+          <button onClick={createRoom} className="big-button button-center">
+            Add room
+          </button>
+          {/* <button className="big-button">Add room</button> */}
         </div>
       </div>
     </div>

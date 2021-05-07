@@ -145,6 +145,7 @@ exports.post_create_room = async (req, res, next) => {
   const newRoom = new Room({
     roomName: req.body.roomname,
     // messages: [],
+    // users: [req.body.userID]
     createdDate: moment().tz("Asia/Tokyo").format("lll"),
   });
   const savedRoom = await newRoom.save();

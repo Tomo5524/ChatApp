@@ -6,6 +6,7 @@ const RoomSchema = new Schema({
   roomName: { type: String, unique: true, required: true },
   createdDate: { type: String },
   messages: [{ type: [Object] }],
+  users: [{ type: [Object] }],
   roomSlug: {
     type: String,
     required: true,

@@ -8,7 +8,6 @@ import CreateRoom from "./createRoom";
 // import io from "socket.io-client";
 import { UserContext } from "../UserContext";
 import Loader from "./loader";
-import Progress from "./progress";
 import axios from "axios";
 
 // let socket;
@@ -24,11 +23,8 @@ function Room() {
   const [Room, setRoom] = useState("");
   // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
   const [roomsLoaded, setRoomsLoaded] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  console.log(
-    "🚀 ~ file: room.js ~ line 28 ~ Room ~ uploadPercentage",
-    uploadPercentage
-  );
+  console.log("🚀 ~ file: room.js ~ line 27 ~ Room ~ roomsLoaded", roomsLoaded);
+  const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState("");
   // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
   const [roomID, setRoomID] = useState("");
@@ -54,43 +50,76 @@ function Room() {
     fetchRooms();
   }, []);
 
+  // useEffect(() => {
+  //   if (progress === 100) {
+  //     setTimeout(() => {
+  //       setRoomsLoaded(true);
+  //     }, 100);
+  //   }
+  // }, [progress]);
+
   const fetchRooms = async () => {
     try {
       // setLoading(true);
       // const res = await fetch(`${ENDPOINT}/api/rooms`, {
       //   mode: "cors",
       // });
-      const res = await axios.get(`${ENDPOINT}/api/rooms`, {
-        onDownloadProgress: (progressEvent) => {
-          console.log(
-            "🚀 ~ file: room.js ~ line 70 ~ fetchRooms ~ progressEvent",
-            progressEvent
-          );
-          console.log("progress event got called////////////");
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-        },
-      });
+      const res = await axios.get(`${ENDPOINT}/api/rooms`);
+      // {
+      //   onDownloadProgress: (progressEvent) => {
+      //     console.log(
+      //       "🚀 ~ file: room.js ~ line 70 ~ fetchRooms ~ progressEvent",
+      //       progressEvent
+      //     );
+      //     const totalLength = progressEvent.lengthComputable
+      //       ? progressEvent.total
+      //       : progressEvent.target.getResponseHeader("content-length") ||
+      //         progressEvent.target.getResponseHeader(
+      //           "x-decompressed-content-length"
+      //         );
+      //     console.log(
+      //       progressEvent.lengthComputable,
+      //       "progressEvent.lengthComputable//////////"
+      //     );
+      //     console.log("onDownloadProgress", totalLength);
+      //     if (totalLength !== null) {
+      //       setProgress(Math.round((progressEvent.loaded * 100) / totalLength));
+      //     }
+      //     if (progress === 100) {
+      //       setTimeout(() => {
+      //         console.log("load finished!////////");
+      //         setRoomsLoaded(true);
+      //       }, 400);
+      //     }
+      //   },
+      // }
       // console.log(res, "res////////");
       // const data = await res.json();
-
+      // if (progress === 100) {
+      //   setTimeout(() => {
+      //     console.log("load finished!////////");
+      //     setRoomsLoaded(true);
+      //   }, 100);
+      // }
       // Clear percentage
       // setTimeout(() => setUploadPercentage(0), 10000);
       console.log(res, "data/////");
       setRooms(res.data);
-      setRoomsLoaded(true);
+
+      // when loading is way too fast, loader icon disappears right away so let it stay for a few seconds
+      setTimeout(() => {
+        setRoomsLoaded(true);
+      }, 2000);
+      // setRoomsLoaded(true);
       // setLoading(false);
     } catch (err) {
       console.log(err);
-      if (err.response.status === 500) {
-        setMessage("There was a problem with the server");
-      } else {
-        setMessage(err.response.data.msg);
-      }
-      setUploadPercentage(0);
+      // if (err.response.status === 500) {
+      //   setMessage("There was a problem with the server");
+      // } else {
+      //   setMessage(err.response.data.msg);
+      // }
+      setProgress(0);
     }
   };
 
@@ -261,7 +290,10 @@ function Room() {
                       to={{
                         pathname: "/create-room",
                         // state: { setRoom, createRoom },
-                        state: { baseURL: history.location.pathname },
+                        state: {
+                          baseURL: history.location.pathname,
+                          userID: id,
+                        },
                       }}
                     >
                       <button class="btn text-white">Create a new room</button>
@@ -287,7 +319,10 @@ function Room() {
                     <Link
                       to={{
                         pathname: "/create-room",
-                        state: { baseURL: history.location.pathname },
+                        state: {
+                          baseURL: history.location.pathname,
+                          userID: id,
+                        },
                       }}
                     >
                       <button class="btn text-white">Create a new room</button>
@@ -308,12 +343,7 @@ function Room() {
             </div>
           </div>
         ) : (
-          <>
-            <Progress percentage={uploadPercentage} />
-            <div>hiya</div>
-          </>
-
-          // <Loader />
+          <Loader />
         )}
       </div>
     </div>
