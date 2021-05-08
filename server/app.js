@@ -26,7 +26,7 @@ const room = require("./models/room");
 const { text } = require("express");
 // const { Server } = require("tls");
 var app = express();
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 
 const server = http.createServer(app);
 const io = socketio(server);

@@ -7,6 +7,8 @@ const RoomSchema = new Schema({
   createdDate: { type: String },
   messages: [{ type: [Object] }],
   users: [{ type: [Object] }],
+  isPrivate: { type: Boolean },
+  password: { type: String }, // for private room
   roomSlug: {
     type: String,
     required: true,

@@ -43,7 +43,7 @@ exports.post_login = function (req, res, next) {
 
 exports.get_rooms = async (req, res, next) => {
   try {
-    const Rooms = await Room.find();
+    const Rooms = await Room.find({ isPrivate: "false" });
     if (Rooms) {
       res.status(200).json(Rooms);
       // console.log(`Successfully deleted document that had the form: ${Rooms}.`);
@@ -53,6 +53,52 @@ exports.get_rooms = async (req, res, next) => {
   } catch (err) {
     console.log("in get rooms");
     console.error(`Failed to find and document for all the rooms: ${err}`);
+  }
+  // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
+  //   if (err) {
+  //     return next(err);
+  //   }
+  //   // Successful, so render
+  //   console.log(
+  //     "🚀 ~ file: controller.js ~ line 12 ~ Room.findOne ~ room",
+  //     room
+  //   );
+  //   res.status(200).json(post);
+  //   // res.json(posts);
+  // });
+};
+
+exports.post_room_pass = async (req, res, next) => {
+  // console.log(req, "req got called");
+  console.log("post pass room pass called");
+  console.log(req.body, "req.body");
+  console.log(req.body.data.room, "req.body.data.room");
+  try {
+    const PrivateRoom = await Room.find({ roomName: req.body.data.room });
+    console.log(PrivateRoom, "PrivateRoom///////");
+    if (PrivateRoom === undefined || PrivateRoom.length == 0) {
+      // res.status(200).json(PrivateRoom);
+      // console.log(`Successfully deleted document that had the form: ${Rooms}.`);
+      // no existing room with that requested name.
+      console.log("No document matches the provided query.");
+      return res.status(404).json({ message: "No room found" });
+    } else {
+      console.log(req.body.data.password, "req.body.data.password///////");
+      console.log(PrivateRoom[0].password, "PrivateRoom.password/////");
+      if (req.body.data.password === PrivateRoom[0].password) {
+        res.status(200).json(PrivateRoom);
+        // console.log(`Successfully fetched document that had the form: ${PrivateRoom}.`);
+      } else {
+        // password doest not match.
+        res.status(200).json({ message: "Incorrect password" });
+      }
+    }
+  } catch (err) {
+    console.log("in get rooms");
+    console.error(
+      `Failed to find and document for the requested private room: ${err}`
+    );
+    return res.status(500).json({ message: "Something went wrong." });
   }
   // Room.findOne({ roomName: req.params.slug }).exec((err, room) => {
   //   if (err) {
@@ -132,6 +178,7 @@ exports.post_message = async (req, res, next) => {
 
 exports.post_create_room = async (req, res, next) => {
   console.log(req.body, "req.body/////");
+  console.log(req.body.private, "Private req body/////");
   // Validate and santise the name field.
   // body("title", "Name must be between 1 and 200 characters")
   //   .isLength({ min: 1, max: 200 })
@@ -146,11 +193,13 @@ exports.post_create_room = async (req, res, next) => {
     roomName: req.body.roomname,
     // messages: [],
     // users: [req.body.userID]
+    isPrivate: req.body.private,
+    password: req.body.password,
     createdDate: moment().tz("Asia/Tokyo").format("lll"),
   });
   const savedRoom = await newRoom.save();
-  console.log(newRoom, "newRoom/////////");
   if (!newRoom) throw Error("Something went wrong saving the user");
+  console.log(newRoom, "newRoom/////////");
   res.status(200).json({
     // savedRoom,
     id: savedRoom.id,
@@ -192,4 +241,23 @@ exports.post_delete = async (req, res, next) => {
   //   .catch((err) =>
   //     console.error(`Failed to find and delete document: ${err}`)
   //   );
+};
+
+exports.post_delete_room = async (req, res, next) => {
+  console.log(
+    req.params,
+    "this is req.params.id from delete post///////////////////////////"
+  );
+  try {
+    const deletedRoom = await Room.findByIdAndDelete(req.params.roomID);
+    if (deletedRoom) {
+      console.log(
+        `Successfully deleted document that had the form: ${deletedRoom}.`
+      );
+    } else {
+      console.log("No document matches the provided query.");
+    }
+  } catch (err) {
+    console.error(`Failed to find and delete document: ${err}`);
+  }
 };
