@@ -7,6 +7,7 @@ import { useHistory, Link } from "react-router-dom";
 import CreateRoom from "./createRoom";
 // import io from "socket.io-client";
 import { UserContext } from "../UserContext";
+import { LoadRoomsContext } from "../LoadRoomsContext";
 import Loader from "./loader";
 import axios from "axios";
 
@@ -14,15 +15,15 @@ import axios from "axios";
 
 function Room() {
   const { user, setUser } = useContext(UserContext);
+  const { roomsLoadCalled, setroomsLoadCalled } = useContext(LoadRoomsContext);
+  const [roomsLoaded, setRoomsLoaded] = useState(false);
   console.log("🚀 ~ file: room.js ~ line 15 ~ Room ~ user", user);
   // console.log(localStorage, "locastorage");
   // const [username, settUsername] = useState("");
-  console.log("room got called");
   // const [loading, setLoading] = useState(false);
   // const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
   // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
-  const [roomsLoaded, setRoomsLoaded] = useState(false);
   console.log("🚀 ~ file: room.js ~ line 27 ~ Room ~ roomsLoaded", roomsLoaded);
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState("");
@@ -50,21 +51,15 @@ function Room() {
     fetchRooms();
   }, []);
 
-  // useEffect(() => {
-  //   if (progress === 100) {
-  //     setTimeout(() => {
-  //       setRoomsLoaded(true);
-  //     }, 100);
-  //   }
-  // }, [progress]);
-
   const fetchRooms = async () => {
     try {
       // setLoading(true);
       // const res = await fetch(`${ENDPOINT}/api/rooms`, {
       //   mode: "cors",
       // });
-      const res = await axios.get(`${ENDPOINT}/api/rooms`);
+      const res = await axios.get(`${ENDPOINT}/api/rooms`, {
+        mode: "cors",
+      });
       // {
       //   onDownloadProgress: (progressEvent) => {
       //     console.log(
@@ -107,9 +102,21 @@ function Room() {
       setRooms(res.data);
 
       // when loading is way too fast, loader icon disappears right away so let it stay for a few seconds
-      setTimeout(() => {
-        setRoomsLoaded(true);
-      }, 2000);
+      if (roomsLoadCalled) {
+        // API already got called so Heroku (backend server) is awake and runs faster than the very first fetch
+        setTimeout(() => {
+          setRoomsLoaded(true);
+        }, 500);
+      } else {
+        // first time to fetch API so have a longer timeout
+        setTimeout(() => {
+          setRoomsLoaded(true);
+          setroomsLoadCalled(true);
+        }, 1250);
+      }
+      // setTimeout(() => {
+      //   setRoomsLoaded(true);
+      // }, 1250);
       // setRoomsLoaded(true);
       // setLoading(false);
     } catch (err) {
@@ -254,7 +261,7 @@ function Room() {
               <h1>
                 {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
               </h1>
-              <p class="text-muted p-3"> Please choose room!</p>
+              <p class="text-muted p-3">Choose public room!</p>
               {rooms && rooms.length !== 0 ? (
                 <>
                   <div className="form-box">
@@ -284,7 +291,7 @@ function Room() {
                       onClick={moveToAnotherRoom}
                       className="big-button mb-5"
                     >
-                      Go to room
+                      Join room
                     </button>
                     <Link
                       to={{
@@ -297,6 +304,17 @@ function Room() {
                       }}
                     >
                       <button class="btn text-white">Create a new room</button>
+                    </Link>
+                    <Link
+                      to={{
+                        pathname: "/join-private-room",
+                        state: {
+                          baseURL: history.location.pathname,
+                          userID: id,
+                        },
+                      }}
+                    >
+                      <button class="btn text-white">Join private room</button>
                     </Link>
                   </div>
                   <div className="d-flex justify-content-center pt-3">
@@ -326,6 +344,17 @@ function Room() {
                       }}
                     >
                       <button class="btn text-white">Create a new room</button>
+                    </Link>
+                    <Link
+                      to={{
+                        pathname: "/join-private-room",
+                        state: {
+                          baseURL: history.location.pathname,
+                          userID: id,
+                        },
+                      }}
+                    >
+                      <button class="btn text-white">Join private room</button>
                     </Link>
                   </div>
                   <div className="d-flex justify-content-center pt-3">

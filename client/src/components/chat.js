@@ -49,8 +49,8 @@ function Chat(props) {
   const messagesEndRef = useRef(null);
 
   // const id = currentUser && currentUser.user.id;
-  // const ENDPOINT = "http://localhost:5000";
-  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
+  const ENDPOINT = "http://localhost:5000";
+  // const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   useEffect(() => {
     // console.log("first user effect got called");
@@ -190,6 +190,27 @@ function Chat(props) {
     }
   };
 
+  const deleteRoom = (e) => {
+    console.log(roomID, "roomID/////");
+    try {
+      fetch(`${ENDPOINT}/api/delete-room/${roomID}`, {
+        mode: "cors",
+        method: "POST",
+        // acition: `http://localhost:5000/api/delete/${id}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader(),
+        },
+      });
+      e.preventDefault();
+      history.push("/");
+      console.log("delete called");
+      // window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // console.log(message, "message////////");
   // console.log(messages, "messages////////");
   // console.log(isSender, "isSender//////");
@@ -204,7 +225,11 @@ function Chat(props) {
                 <h4 className="card-title">
                   <strong>Chat</strong>
                 </h4>{" "}
-                <a className="btn btn-xs btn-secondary" dataAbc="true">
+                <a
+                  className="btn btn-xs btn-secondary"
+                  dataAbc="true"
+                  onClick={deleteRoom}
+                >
                   Delete This Room
                 </a>
               </div>

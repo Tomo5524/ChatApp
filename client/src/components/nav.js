@@ -16,7 +16,7 @@ import "./style/nav.css";
 
 function NavBar() {
   const { user, setUser } = useContext(UserContext);
-  console.log("🚀 ~ file: nav.js ~ line 7 ~ Nav ~ user", user);
+  // console.log("🚀 ~ file: nav.js ~ line 7 ~ Nav ~ user", user);
 
   // const handleLogOut = () => {
   //   setUser(null);
@@ -67,9 +67,9 @@ function NavBar() {
                 <Nav.Link className="nav-item text-white" as={Link} to="/">
                   Rooms
                 </Nav.Link>
-                <Nav.Link className="nav-item text-white" as={Link} to="/about">
+                {/* <Nav.Link className="nav-item text-white" as={Link} to="/about">
                   Logout
-                </Nav.Link>
+                </Nav.Link> */}
                 <Nav.Link className="nav-item text-white" as={Link} to="/about">
                   About
                 </Nav.Link>
