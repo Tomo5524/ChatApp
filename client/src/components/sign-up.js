@@ -1,6 +1,4 @@
 import React, { useState, useRef, useContext } from "react";
-// import renderHTML from "react-render-html";
-// import { Link } from "react-router-dom";
 import { useHistory, Link } from "react-router-dom";
 import "./style/sign-up.css";
 import { UserContext } from "../UserContext";
@@ -16,45 +14,33 @@ function Signup() {
   // const ENDPOINT = "http://localhost:5000";
   // let errorMessage;
 
-  console.log(username, "username,/////////");
-  console.log(password, "password,,/////////");
-
   const checkPassword = (password, confirmpass) => {
     if (password === confirmpass) return true;
     else return false;
   };
 
   const handleSubmit = (e) => {
-    console.log("handleSubmit/////////");
     if (checkPassword(password, confirmpass)) {
-      console.log(password, confirmpass, "password, confirmpass/////////");
       fetch(`${ENDPOINT}/api/sign-up`, {
         // mode: "cors",
         method: "POST",
         acition: `${ENDPOINT}/api/sign-up`,
         headers: {
           "Content-Type": "application/json",
-          // Connection: "keep-alive",
-          // credentials: "include",
         },
         body: JSON.stringify({ username, password }),
       })
         .then((data) => data.json())
-        .then(function (res) {
-          console.log("🚀 ~ file: sign-up.js ~ line 39 ~ res", res);
-          // if user successfully sign up
+        .then((res) => {
+          // if sign up successfully went through
           if (res.token) {
+            // set user globally wiht useContext
             setUser(res);
-            console.log(res.user.username, "res.user.username");
             localStorage.setItem("currentUser", JSON.stringify(res));
             history.push(`/chat/${res.user.userSlug}`);
-            // history.push(`/chat/${res.user.username}`); wrong
-            console.log(res, "currentUser");
-            // return
           }
-          // can connect database but something went wrong, etc, username already is taken
+          // error example: can connect database but something went wrong, etc, username already is taken
           else {
-            // res has msg property (error message) sent from server
             seterrMessage(res.msg);
             error.current.classList.add("display");
             setTimeout(() => {
@@ -64,15 +50,6 @@ function Signup() {
           }
         })
         .catch((err) => {
-          console.log("did not go thru");
-          console.log(err);
-          // console.log({ err });
-          // console.log(err.message);
-          // seterrMessage(err); got the following error message,
-          // Error: Objects are not valid as a React child (found: TypeError: Failed to fetch). If you meant to render a collection of children, use an array instead.
-          // err is not string but object so you need to deconstruct
-          // seterrMessage(err.message);
-          // seterrMessage("Failed to connect database");
           seterrMessage("Something went wrong");
           error.current.classList.add("display");
           setTimeout(() => {

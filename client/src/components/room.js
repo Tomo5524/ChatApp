@@ -1,106 +1,43 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-// import renderHTML from "react-render-html";
 import { authHeader, logOut, getUser } from "../services/auth";
 import RoomID from "./utils/roomID";
 import "./style/room.css";
 import { useHistory, Link } from "react-router-dom";
 import CreateRoom from "./createRoom";
-// import io from "socket.io-client";
 import { UserContext } from "../UserContext";
 import { LoadRoomsContext } from "../LoadRoomsContext";
 import Loader from "./loader";
 import axios from "axios";
 
-// let socket;
-
 function Room() {
+  // global user context
   const { user, setUser } = useContext(UserContext);
+  // if server (Heroku) is activated, reduce the timeset out and this is the flag
   const { roomsLoadCalled, setroomsLoadCalled } = useContext(LoadRoomsContext);
   const [roomsLoaded, setRoomsLoaded] = useState(false);
-  console.log("🚀 ~ file: room.js ~ line 15 ~ Room ~ user", user);
-  // console.log(localStorage, "locastorage");
-  // const [username, settUsername] = useState("");
-  // const [loading, setLoading] = useState(false);
-  // const [currentUser, setCurrentUser] = useState("");
   const [Room, setRoom] = useState("");
-  // without this, add room component always gets displayed right after the page is loaded. this state prevents that from happening.
-  console.log("🚀 ~ file: room.js ~ line 27 ~ Room ~ roomsLoaded", roomsLoaded);
-  const [progress, setProgress] = useState(0);
-  const [message, setMessage] = useState("");
-  // console.log("🚀 ~ file: room.js ~ line 16 ~ Room ~ Room", Room);
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
   console.log("🚀 ~ file: room.js ~ line 26 ~ Room ~ rooms", rooms);
-  // pass in roominfo to chat componnet so room messages can be extracted from its id
-  // const { username, id } = user && user.user;
-  // console.log(currentUser.user);
+
   const username = user && user.user.username;
   const id = user && user.user._id;
-  // console.log(id, "id");
 
   let history = useHistory();
   // const ENDPOINT = "http://localhost:5000";
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   useEffect(() => {
-    console.log("first user effect got called");
-    // setRoomsLoaded(true);
-    // get current user
-    // setCurrentUser(getUser());
     // grab rooms from back end
     fetchRooms();
   }, []);
 
   const fetchRooms = async () => {
     try {
-      // setLoading(true);
-      // const res = await fetch(`${ENDPOINT}/api/rooms`, {
-      //   mode: "cors",
-      // });
       const res = await axios.get(`${ENDPOINT}/api/rooms`, {
         mode: "cors",
       });
-      // {
-      //   onDownloadProgress: (progressEvent) => {
-      //     console.log(
-      //       "🚀 ~ file: room.js ~ line 70 ~ fetchRooms ~ progressEvent",
-      //       progressEvent
-      //     );
-      //     const totalLength = progressEvent.lengthComputable
-      //       ? progressEvent.total
-      //       : progressEvent.target.getResponseHeader("content-length") ||
-      //         progressEvent.target.getResponseHeader(
-      //           "x-decompressed-content-length"
-      //         );
-      //     console.log(
-      //       progressEvent.lengthComputable,
-      //       "progressEvent.lengthComputable//////////"
-      //     );
-      //     console.log("onDownloadProgress", totalLength);
-      //     if (totalLength !== null) {
-      //       setProgress(Math.round((progressEvent.loaded * 100) / totalLength));
-      //     }
-      //     if (progress === 100) {
-      //       setTimeout(() => {
-      //         console.log("load finished!////////");
-      //         setRoomsLoaded(true);
-      //       }, 400);
-      //     }
-      //   },
-      // }
-      // console.log(res, "res////////");
-      // const data = await res.json();
-      // if (progress === 100) {
-      //   setTimeout(() => {
-      //     console.log("load finished!////////");
-      //     setRoomsLoaded(true);
-      //   }, 100);
-      // }
-      // Clear percentage
-      // setTimeout(() => setUploadPercentage(0), 10000);
-      console.log(res, "data/////");
       setRooms(res.data);
-
       // when loading is way too fast, loader icon disappears right away so let it stay for a few seconds
       if (roomsLoadCalled) {
         // API already got called so Heroku (backend server) is awake and runs faster than the very first fetch
@@ -114,45 +51,10 @@ function Room() {
           setroomsLoadCalled(true);
         }, 1250);
       }
-      // setTimeout(() => {
-      //   setRoomsLoaded(true);
-      // }, 1250);
-      // setRoomsLoaded(true);
-      // setLoading(false);
     } catch (err) {
       console.log(err);
-      // if (err.response.status === 500) {
-      //   setMessage("There was a problem with the server");
-      // } else {
-      //   setMessage(err.response.data.msg);
-      // }
-      setProgress(0);
     }
   };
-
-  // const isFirstRun = useRef(true);
-
-  // useEffect(() => {
-  //   // if (isFirstRun.current) {
-  //   //   isFirstRun.current = false;
-  //   //   return;
-  //   // }
-  //   console.log("socket usereffect got called");
-  //   socket = io(ENDPOINT, {
-  //     transports: ["websocket", "polling", "flashsocket"],
-  //   });
-  //   // socket.emit("join", currentUser.user.username);
-  //   // console.log(socket, "socket");
-  //   if (currentUser) {
-  //     socket.emit("join", username);
-  //     // unamount
-  //     // return () => {
-  //     //   socket.emit("disconnect");
-  //     //   // turn off the user that just left
-  //     //   socket.off();
-  //     // };
-  //   }
-  // }, [currentUser]);
 
   const handleLogOut = () => {
     setUser(null);
@@ -185,51 +87,10 @@ function Room() {
     }
   };
 
-  // if there is no room to select, let user create a new room and navigate to chat component
-  // const createRoom = async (e) => {
-  //   console.log("create room");
-  //   console.log(Room, "Room");
-  //   if (Room) {
-  //     try {
-  //       const data = await fetch(`${ENDPOINT}/api/create-room`, {
-  //         mode: "cors",
-  //         method: "POST",
-  //         // acition: ``${ENDPOINT}/api/create-room``,
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: authHeader(),
-  //         },
-  //         body: JSON.stringify({ roomname: Room }),
-  //       });
-  //       console.log("🚀 ~ file: chat.js ~ line 118 ~ createRoom ~ room", data);
-  //       const room = await data.json();
-  //       console.log(room, "room/////");
-  //       e.preventDefault();
-  //       setRoom("");
-  //       // console.log(history, "history");
-  //       const currnetURL = history.location.pathname;
-  //       history.push({
-  //         pathname: `${currnetURL}/${room.roomSlug}`,
-  //         state: { roomInfo: { roomName: room.roomName, roomID: room.id } },
-  //       });
-  //       // history.push(`${currnetURL}/${room.roomSlug}`);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   } else {
-  //     console.log("room name is not valid");
-  //   }
-  // };
-
   // if there are already rooms to choose, this functin gets called
   const moveToAnotherRoom = () => {
     // if there is no room that is choosen by user, don't proceed
     if (Room) {
-      console.log(
-        Room,
-        "Room before moving onto another component////////////"
-      );
-      console.log(roomID, "roomID moving onto another component////////////");
       const currnetURL = history.location.pathname;
       // at this point, Room is roomSlug
       history.push({
@@ -238,25 +99,11 @@ function Room() {
       });
     }
   };
-
-  // console.log(Room, "Room");
-
   return (
     <div className="container mid-break-margin h-90vh">
-      {/* <a className="btn btn-primary" onClick={handleLogOut}>
-        Log out
-      </a>
-      <form>
-        <a className="btn btn-danger" onClick={deleteUser}>
-          User Delete
-        </a>
-      </form> */}
-      {/* if room exists, let user choose it, if not, let user create new one. */}
-      {/* <div className="col-12 col-md-10 d-none d-xl-block"> */}
       <div class="col-md-8 col-lg-6 mx-auto">
         {roomsLoaded ? (
           <div class="box">
-            {/* {message ? <Message msg={message} /> : null} */}
             <div className="p-4">
               <h1>
                 {user ? <h4>Welcomeback {username}!</h4> : <h2>No User</h2>}
@@ -293,6 +140,8 @@ function Room() {
                     >
                       Join room
                     </button>
+                  </div>
+                  <div className="m-auto">
                     <Link
                       to={{
                         pathname: "/create-room",
@@ -302,8 +151,9 @@ function Room() {
                           userID: id,
                         },
                       }}
+                      className="link-padding d-block"
                     >
-                      <button class="btn text-white">Create a new room</button>
+                      <a className="text-white">Create a new room</a>
                     </Link>
                     <Link
                       to={{
@@ -313,8 +163,9 @@ function Room() {
                           userID: id,
                         },
                       }}
+                      className="link-padding d-block"
                     >
-                      <button class="btn text-white">Join private room</button>
+                      <a className="text-white">Join private room</a>
                     </Link>
                   </div>
                   <div className="d-flex justify-content-center pt-3">
@@ -342,8 +193,9 @@ function Room() {
                           userID: id,
                         },
                       }}
+                      className="link-padding"
                     >
-                      <button class="btn text-white">Create a new room</button>
+                      <a className="text-white text-link">Create a new room</a>
                     </Link>
                     <Link
                       to={{
@@ -353,8 +205,9 @@ function Room() {
                           userID: id,
                         },
                       }}
+                      className="link-padding"
                     >
-                      <button class="btn text-white">Join private room</button>
+                      <a className="text-white text-link">Join private room</a>
                     </Link>
                   </div>
                   <div className="d-flex justify-content-center pt-3">

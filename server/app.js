@@ -34,12 +34,7 @@ const io = socketio(server);
 // socket is the user who just joined.
 // each user has unique properites (id etc,,,)
 io.on("connect", (socket) => {
-  // console.log("user joined");
-
   socket.on("join", ({ username, roomName }) => {
-    // console.log("new user joined");
-    console.log(`${username} has joined!`);
-    // console.log(`$in ${roomName}`);
     socket.join(roomName);
 
     // /sending to sender-client only, e,g, everytime a new user joins, it will send out this message to only one person (the user) who just joined
@@ -55,22 +50,10 @@ io.on("connect", (socket) => {
     // socket.join(roomName);
     // get message from the front server
     socket.on("messeageSent", ({ message, roomName }) => {
-      console.log(message, "msg");
-      console.log(roomName, "roomName");
-      console.log(message, "messageSent//////");
       // send message all the users in the room that was passed in from the client sever
       io.to(roomName).emit("message", { message, username });
     });
   });
-
-  // // get message from the front server
-  // socket.on("messeageSent", ({ message, roomName }) => {
-  //   console.log(message, "msg");
-  //   console.log(roomName, "roomName");
-  //   console.log(message, "messageSent//////");
-  //   // send message all the users in the room that was passed in from the client sever
-  //   io.to(roomName).emit("message", { message }, username);
-  // });
 
   // socket.on("disconnect", ({ username, roomName }) => {
   socket.on("disconnect", () => {
@@ -78,8 +61,6 @@ io.on("connect", (socket) => {
     // socket.broadcast
     //   .to(roomName)
     //   .emit("message", { message: `${username} has left the chat!`, username });
-
-    // console.log(`${username} disconnected!//`);
   });
 });
 

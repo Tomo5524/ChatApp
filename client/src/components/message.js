@@ -1,15 +1,7 @@
 import React, { useRef } from "react";
 
 const Message = ({ msg, userName }) => {
-  // console.log("🚀 ~ file: message.js ~ line 4 ~ Message ~ userName", userName);
-  // console.log("🚀 ~ file: message.js ~ line 4 ~ Message ~ msg", msg);
   let isSender = msg.username === userName ? true : false;
-  // console.log(
-  //   msg,
-  //   userName,
-  //   "msg and username in message component///////////"
-  // );
-  // console.log("🚀 ~ file: message.js ~ line 6 ~ Message ~ isSender", isSender);
 
   return (
     <div className="messages">

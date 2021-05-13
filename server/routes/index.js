@@ -10,7 +10,6 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const bcrypt = require("bcryptjs");
 const moment = require("moment-timezone");
 
-// When does this get called?
 passport.use(
   new JWTStrategy(
     {
@@ -20,15 +19,12 @@ passport.use(
     function (jwtPayload, done) {
       console.log("jwtStrategy got called");
       //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-      //console.log(jwtPayload, "jwtPayloadjwtPayload////");
 
       User.findById(jwtPayload._id, (err, user) => {
         if (err) return done(err);
         if (!user) {
-          // console.log("user not found");
           return done(null, false, { message: "Username was not found" });
         } else {
-          // console.log(user, "userfound");
           return done(null, user);
         }
       });
@@ -36,15 +32,7 @@ passport.use(
   )
 );
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  // res.render("index", { title: "Express" });
-  res.send("hiya");
-});
-
 router.post("/api/sign-up", async (req, res, next) => {
-  console.log(req.body, "req.body called////////////");
-  // console.log("sign-up gets called////////////");
   const { username, password } = req.body;
   // Simple validation
   if (!username || !password) {
@@ -52,16 +40,11 @@ router.post("/api/sign-up", async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username });
-    // if (user) throw Error("User already exists")
-    // if (user) res.status(400).json({ error: "User already exists" }); wrong
     if (user) {
-      // throw Error("User already exists"); this line caused error message not to be sent to frontend
       return res.status(400).json({ msg: "Username is already taken" });
     }
     // hash password
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-      // console.log(hashedPassword, "hashedPassword called////////////");
-      // if err, do something
       if (err) {
         console.log(err);
         return next(err);
@@ -75,16 +58,14 @@ router.post("/api/sign-up", async (req, res, next) => {
       });
 
       const savedUser = await newUser.save();
-      console.log(savedUser, "saveduser/////////");
       if (!savedUser) throw Error("Something went wrong saving the user");
 
       // create token
       const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET);
-      // console.log(token, "token//////////");
       res.status(200).json({
         token,
         user: {
-          id: savedUser.id,
+          _id: savedUser.id,
           username: savedUser.username,
           userSlug: savedUser.userSlug,
         },

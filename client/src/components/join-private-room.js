@@ -13,8 +13,8 @@ function JoinPrivateRoom(props) {
   const [errMessage, setErrMessage] = useState("");
 
   let history = useHistory();
-  const ENDPOINT = "http://localhost:5000";
-  // const ENDPOINT = "https://mern-caht-app.herokuapp.com";
+  // const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   // const JoinRoom = () => {
   //   console.log("hiya");
@@ -75,7 +75,7 @@ function JoinPrivateRoom(props) {
     } else {
       if (room === "" && password === "") {
         setErrMessage("Enter Password and Room");
-      } else if (room !== "") {
+      } else if (room === "") {
         setErrMessage("Enter Room");
       } else {
         setErrMessage("Enter Password");
