@@ -1,5 +1,7 @@
 # MERN: Full-stack Real-Time Chat Application
 
+## [Live](https://mern-realtime-chat-app.netlify.app/)
+
 #### Introduction
 
 The MERN stack (**Mongo DB**, **Express.js**, **React.js** and **Node.js**) is a popular stack for building full-stack web-based applications because of its simplicity and ease of use. With the explosive popularity and the growing maturity of the JavaScript ecosystem, the MERN stack has been the go-to stack for a large number of web applications.
@@ -25,24 +27,25 @@ This application provides users with the following features
 
 ##### Chat Room
 
-<!--
-![Chat Room](https://i.imgur.com/VkdwAme.png)
+<img width="746" alt="Chat Room" src="https://user-images.githubusercontent.com/35819620/118435923-d4abe580-b71a-11eb-896c-85d49aaeabaa.png">
 <br/><br/>
 
 ##### Choose Public Room
 
-![Private Chat](https://i.imgur.com/jdCBYu4.png)
+<img width="1180" alt="Public Room" src="https://user-images.githubusercontent.com/35819620/118436194-57cd3b80-b71b-11eb-9a51-fff3233260b4.png">
+
 <br/><br/>
 
 ##### Login
 
-![Login](https://i.imgur.com/6iobucn.png)
+<img width="1160" alt="Login" src="https://user-images.githubusercontent.com/35819620/118436376-b09cd400-b71b-11eb-8b4e-5d775bfc6389.png">
+
 <br/><br/>
 
 ##### Sign Up
 
-![Register](https://i.imgur.com/AMkpl9C.png)s
--->
+<img width="1203" alt="Sign up" src="https://user-images.githubusercontent.com/35819620/118436329-9c58d700-b71b-11eb-8991-a1778b8fa68b.png">
+
 
 ### How to use
 
