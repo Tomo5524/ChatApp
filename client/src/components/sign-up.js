@@ -104,6 +104,9 @@ function Signup() {
           <Link to="/login">
             <button className="btn text-white">Already have an account</button>
           </Link>
+          <div ref={error} className="error-container d-block pb-4 sign-up-div">
+            <h3 className="m-0 sign-up-text">{errMessage}</h3>
+          </div>
         </form>
       </div>
     </div>

@@ -7,9 +7,7 @@ import { UserContext } from "../UserContext";
 function Home() {
   // const [currentUser, setCurrentUser] = useState(getUser());
   const { user, setUser } = useContext(UserContext);
-  console.log("🚀 ~ file: home.js ~ line 10 ~ Home ~ user", user);
   const username = user && user.user.username;
-  console.log("🚀 ~ file: home.js ~ line 12 ~ Home ~ username", username);
   const userID = user && user.user.id;
 
   return user ? (

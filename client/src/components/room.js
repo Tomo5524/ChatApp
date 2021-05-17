@@ -18,7 +18,6 @@ function Room() {
   const [Room, setRoom] = useState("");
   const [roomID, setRoomID] = useState("");
   const [rooms, setRooms] = useState([]);
-  console.log("🚀 ~ file: room.js ~ line 26 ~ Room ~ rooms", rooms);
 
   const username = user && user.user.username;
   const id = user && user.user._id;
@@ -59,27 +58,24 @@ function Room() {
   const handleLogOut = () => {
     setUser(null);
     logOut();
-    console.log("logout called");
     history.push("/sign-up");
-    // isFirstRun.current = true;
   };
 
   const deleteUser = (e) => {
+    e.preventDefault();
     if (user) {
       try {
         fetch(`${ENDPOINT}/api/delete/${id}`, {
           mode: "cors",
           method: "POST",
-          // acition: `http://localhost:5000/api/delete/${id}`,
+          // acition: `${ENDPOINT}/api/delete/${id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: authHeader(),
           },
         });
-        e.preventDefault();
         handleLogOut();
-        history.push("/");
-        console.log("delete called");
+        history.push("/sign-up");
         window.location.reload();
       } catch (err) {
         console.error(err);

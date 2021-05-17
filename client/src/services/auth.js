@@ -8,6 +8,7 @@ function authHeader() {
 }
 
 function logOut() {
+  // console.log("logout called");
   localStorage.removeItem("currentUser");
   // caused an error that brings user back to sign-up component
   // window.location.reload();

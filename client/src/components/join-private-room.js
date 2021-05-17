@@ -5,9 +5,6 @@ import { authHeader } from "../services/auth";
 import axios from "axios";
 
 function JoinPrivateRoom(props) {
-  // console.log(props.location.state.baseURL);
-  // const { baseURL } = props.location.state; this returns undefined for some reason
-  // console.log(baseURL); return undefined
   const [room, setRoom] = useState("");
   const [password, setPassword] = useState("");
   const [errMessage, setErrMessage] = useState("");
@@ -16,10 +13,6 @@ function JoinPrivateRoom(props) {
   // const ENDPOINT = "http://localhost:5000";
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
-  // const JoinRoom = () => {
-  //   console.log("hiya");
-  // };
-
   const JoinRoom = async (e) => {
     if (room !== "" && password !== "") {
       try {
@@ -27,10 +20,6 @@ function JoinPrivateRoom(props) {
           `${ENDPOINT}/api/room-pass`,
 
           { data: { room, password } }
-        );
-        console.log(
-          "🚀 ~ file: join-private-room.js ~ line 26 ~ JoinRoom ~ res",
-          res
         );
         if (res.data.message) {
           setErrMessage(res.data.message);
@@ -42,7 +31,6 @@ function JoinPrivateRoom(props) {
           console.log("status is other than 200 range");
           console.log(res.reponse, "res.reponse");
         } else {
-          console.log(res.data[0].roomSlug, "res.data[0].roomSlug////");
           history.push({
             pathname: `${props.location.state.baseURL}/${res.data[0].roomSlug}`,
             state: {
@@ -53,7 +41,6 @@ function JoinPrivateRoom(props) {
             },
           });
           setRoom("");
-          console.log("user successfully joined a room");
         }
         e.preventDefault();
       } catch (err) {
@@ -67,10 +54,6 @@ function JoinPrivateRoom(props) {
         setTimeout(() => {
           error.current.classList.remove("display");
         }, 2000);
-        console.log("error got called");
-        console.log(err, "err from server");
-        console.error(err);
-        console.log(err.response, "err.response");
       }
     } else {
       if (room === "" && password === "") {
@@ -93,18 +76,6 @@ function JoinPrivateRoom(props) {
     <div className="container mid-break-margin h-90vh">
       <div className="col-md-8 col-lg-6 mx-auto">
         <div className="box create-room">
-          {/* <div className="input-group">
-            <div className="form-outline">
-              <input type="search" id="form1" className="form-control" />
-              <label className="form-label" for="form1">
-                Search
-              </label>
-            </div>
-            <button type="button" className="btn btn-primary">
-              <i className="fas fa-search"></i> 
-              :)
-            </button>
-          </div> */}
           <label for="room" className="text-white">
             Enter the private room's name!
           </label>
@@ -127,7 +98,6 @@ function JoinPrivateRoom(props) {
           <button onClick={JoinRoom} className="big-button button-center">
             Join
           </button>
-          {/* <button className="big-button">Add room</button> */}
         </div>
       </div>
     </div>

@@ -25,6 +25,11 @@ exports.post_login = function (req, res, next) {
           message: "User authenticated",
           token,
           user,
+          // user: {
+          // id: savedUser.id,
+          // username: savedUser.username,
+          // userSlug: savedUser.userSlug,
+          // },
           // slug: savedUser.slug,
         });
       } else {

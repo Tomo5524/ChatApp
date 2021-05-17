@@ -4,32 +4,15 @@ import { authHeader } from "../services/auth";
 // import { UserContext } from "../UserContext";
 
 function AddRoom(props) {
-  // const { user, setUser } = useContext(UserContext);
-  // console.log(props);
-  // const { setRoom, createRoom } = props.location;
-  // console.log(setRoom, createRoom, "setRoom, createRoom");
-  // console.log(props.location.state.baseURL);
-  // const { baseURL } = props.location.state; this returns undefined for some reason
-  // console.log(baseURL); return undefined
   const [room, setRoom] = useState("");
   const [roomPrivate, setRoomPrivate] = useState(false);
   const [password, setPassword] = useState("");
-  console.log(
-    "🚀 ~ file: createRoom.js ~ line 16 ~ AddRoom ~ roomPrivate",
-    roomPrivate
-  );
 
   let history = useHistory();
   // const ENDPOINT = "http://localhost:5000";
   const ENDPOINT = "https://mern-caht-app.herokuapp.com";
 
   const createRoom = async (e) => {
-    console.log("create room");
-    console.log(room, "Room");
-    console.log(
-      "🚀 ~ file: createRoom.js ~ line 16 ~ AddRoom ~ roomPrivate in POST create room/////////////////////",
-      roomPrivate
-    );
     try {
       const data = await fetch(`${ENDPOINT}/api/create-room`, {
         mode: "cors",
@@ -46,13 +29,9 @@ function AddRoom(props) {
           password,
         }),
       });
-      console.log("🚀 ~ file: chat.js ~ line 118 ~ createRoom ~ room", data);
       const newRoom = await data.json();
-      console.log(newRoom, "room/////");
       e.preventDefault();
       setRoom("");
-      // console.log(history, "history");
-      // const currnetURL = history.location.pathname;
       history.push({
         pathname: `${props.location.state.baseURL}/${newRoom.roomSlug}`,
         state: { roomInfo: { roomName: newRoom.roomName, roomID: newRoom.id } },

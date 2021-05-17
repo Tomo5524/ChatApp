@@ -13,7 +13,6 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("handleSubmit/////////");
     try {
       const res = await fetch(`${ENDPOINT}/api/login`, {
         mode: "cors",
