@@ -20,7 +20,7 @@ This application provides users with the following features
 - Authentication using **JWT Tokens**
 - **Public Chat** which can be used by anyone using the application to broadcast messages to everyone else.
 - **Private Chat** functionality where users can chat with other users privately.
-- Real-time updates to the user list, conversation list, and conversation messages
+- **Real-time updates** to the user list, conversation list, and conversation messages
 
 #### Screenshots
 
