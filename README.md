@@ -48,7 +48,7 @@ This application provides users with the following features
 
 ### How to use
 
-You can get this application up and running with just a few steps because it has both the frontend and the backend in a single repository. Follow the steps below to do so.
+You can get this application up and running with just a few steps but the frontend and the backend need to run separately. Follow the steps below to do so.
 
 1. Clone this repo `~$ git clone <SSH URL> `
 2. Once you have the repo, you need to install its dependencies. So using a terminal, move into the root directory of the project and execute `npm install` to install the dependencies of the Node.js server and then run `npm run client-install` to install the dependencies of the frontend. The second command is a custom command that I wrote to simplify the installation process. As for client (front-end), navigate to client folder and execute `yarn`
