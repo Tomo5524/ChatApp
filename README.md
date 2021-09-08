@@ -51,7 +51,7 @@ This application provides users with the following features
 You can get this application up and running with just a few steps but the frontend and the backend need to run separately. Follow the steps below to do so.
 
 1. Clone this repo `~$ git clone <SSH URL> `
-2. Once you have the repo, you need to install its dependencies. So using a terminal, move into the root directory of the project and execute `npm install` to install the dependencies of the Node.js server and then run `npm run client-install` to install the dependencies of the frontend. The second command is a custom command that I wrote to simplify the installation process. As for client (front-end), navigate to client folder and execute `yarn`
+2. Once you have the repo, you need to install its dependencies. So using a terminal, move into the root directory of the project and execute `npm install` to install the dependencies of the Node.js server. As for client (front-end), navigate to client folder and execute `yarn` to install the dependencies required to run the application
 3. This application uses MongoDB as its Database. So make sure you have it installed. You can find detailed guides on how to do so [here](https://docs.mongodb.com/manual/administration/install-community/). Once installed, make sure that your local MongoDB server is not protected by any kind of authentication. If there is authentication involved, make sure you edit the `mongoURI` in the enviromental variable
 4. Finally, all you have to do is simply run `npm run start` and run `yarn start` for client
 
