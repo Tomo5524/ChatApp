@@ -1,4 +1,4 @@
-# MERN: Full-stack Real-Time Chat Application
+# Full-stack Real-Time Chat Application
 
 ## [Live](https://mern-realtime-chat-app.netlify.app/)
 
@@ -64,7 +64,7 @@ You can get this application up and running with just a few steps but the fronte
 <!--
 ### Disclaimer
 
-This repository contains beginner level code and might contain some things I wish to change or remove. I have not maintained this for quite some time, but now I am trying to slowly fix these issues. You are welcome to open issues if you find any and I will accept PR's as well.
+This repository has not been maintained for quite some time. You are more than welcome to open issues if you find any and I will accept PR's as well.
 <br/><br/>
 
 -->
